@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Consultorio" Class="DataClasesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=Consultorio;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="ConsultorioConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.DiaHorario" Member="DiaHorarios">
+    <Type Name="DiaHorario">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="horario_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dia" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="disponible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="DiaHorario_Turno" Member="Turnos" ThisKey="id" OtherKey="dia_horario_id" Type="Turno" />
+      <Association Name="Horario_DiaHorario" Member="Horario" ThisKey="horario_id" OtherKey="id" Type="Horario" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Usuarios" Member="Usuarios">
+    <Type Name="Usuario">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="Char(60) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Horarios" Member="Horarios">
+    <Type Name="Horario">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="hora" Type="System.TimeSpan" DbType="Time NOT NULL" CanBeNull="false" />
+      <Association Name="Horario_DiaHorario" Member="DiaHorarios" ThisKey="id" OtherKey="horario_id" Type="DiaHorario" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ObrasSociales" Member="ObrasSociales">
+    <Type Name="ObrasSociales">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="nombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="habilitada" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="ObrasSociales_Paciente" Member="Pacientes" ThisKey="id" OtherKey="obra_social_id" Type="Paciente" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Pacientes" Member="Pacientes">
+    <Type Name="Paciente">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="nombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="apellido" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="telefono" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="correo" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="obra_social_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Paciente_Turno" Member="Turnos" ThisKey="id" OtherKey="paciente_id" Type="Turno" />
+      <Association Name="ObrasSociales_Paciente" Member="ObrasSociales" Storage="_ObrasSociale" ThisKey="obra_social_id" OtherKey="id" Type="ObrasSociales" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Turnos" Member="Turnos">
+    <Type Name="Turno">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="paciente_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dia_horario_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="DiaHorario_Turno" Member="DiaHorario" ThisKey="dia_horario_id" OtherKey="id" Type="DiaHorario" IsForeignKey="true" />
+      <Association Name="Paciente_Turno" Member="Paciente" ThisKey="paciente_id" OtherKey="id" Type="Paciente" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

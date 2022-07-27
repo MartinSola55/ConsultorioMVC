@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Consultorio traumatológico</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="icon" type="image/jpg" href="~/favicon.png" />
+</head>
+<body>
+    <div class="navbar navbar-dark bg-dark navbar-inverse fixed-top py-3">
+            <div class="navbar-header">
+                <a class="navbar-brand ms-4" href="/Pacientes">
+                    <img src="~/logo1.png" alt="Logo" width="300" height="40">
+                </a>
+                @Html.ActionLink("Obras sociales", "Inicio", "ObrasSociales", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Pacientes", "Inicio", "Pacientes", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Turnos", "Index", "Turnos", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+    </div>
+
+    <div class="container-fluid body-content mt-5">
+        @RenderBody()
+        <hr />
+        <footer class="text-center bg-dark text-white fixed-bottom align-items-center py-4">
+            <p id="footerText" class="m-0" style="font-size: 1.1rem">&copy; @DateTime.Now.Year - Martín Sola</p>
+        </footer>
+    </div>
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+
+</body>
+</html>
