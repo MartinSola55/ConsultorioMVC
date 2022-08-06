@@ -9,7 +9,7 @@ function listar() {
 
 function listadoOS(arrayHeader, data) {
     let contenido = "";
-    contenido += "<table id='tabla-generic' class='table table-dark table-striped table-bordered table-hover'>";
+    contenido += "<table id='tabla-generic' class='table table-oscura table-striped table-bordered table-hover'>";
     contenido += "<thead>";
     contenido += "<tr>";
     for (let i = 0; i < arrayHeader.length; i++) {

@@ -1,25 +1,31 @@
 ﻿
 @{
-    ViewBag.Title = "Inicio";
+    ViewBag.Title = "Personas";
 }
 
 <link href="~/Content/mis-estilos.css" rel="stylesheet" />
 <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
 
-<h1 class="text-center">Pacientes</h1>
+<h1 class="text-center">Personas</h1>
 
-<label>Ingrese el nombre: </label>
-<input type="text" id="filtroNombre" placeholder="Nombre del paciente" />
-<br />
-<label>Ingrese el apellido: </label>
-<input type="text" id="filtroApellido" placeholder="Apellido del paciente" />
-<br />
-
-<label>Filtrar por obra social: </label>
-<select id="filtroOS">
-
-</select>
-<input type="button" class="btn btn-outline-dark" id="limpia-filtro" value="Limpiar" />
+<div class="container-fluid d-flex">
+    <div class="row me-4 col-3">
+        <label class="form-label">Ingrese el nombre: </label>
+        <input type="text" id="filtroNombre" class="form-control" placeholder="Nombre del paciente" />
+    </div>
+    <div class="row me-4 col-3">
+        <label class="form-label">Ingrese el apellido: </label>
+        <input type="text" id="filtroApellido" class="form-control" placeholder="Apellido del paciente" />
+    </div>
+    <div class="row me-4 col-3">
+        <label class="form-label">Filtrar por obra social: </label>
+        <select id="filtroOS" class="form-select">
+        </select>
+    </div>
+    <div class="row d-flex align-items-end">
+        <input type="button" class="btn btn-outline-dark" id="limpia-filtro" value="Limpiar" style="max-height:3rem" />
+    </div>
+</div>
 
 <div id="tabla-clase" class="mt-4">
 
@@ -39,17 +45,19 @@
             </div>
             <div class="modal-body contenedor-modal">
                 <label class="mb-2">ID: </label>
-                <input id="txtID" type="text" class="limpiarCampo w-25 mb-2" disabled />
+                <input id="txtID" type="text" class="form-control limpiarCampo w-25 mb-2" disabled />
                 <label class="mb-2 campo0">Nombre: </label>
-                <input id="txtNombre" type="text" class="limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                <input id="txtNombre" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
                 <label class="mb-2 campo1">Apellido: </label>
-                <input id="txtApellido" type="text" class="limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                <input id="txtApellido" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
                 <label class="mb-2 campo2">Teléfono: </label>
-                <input id="txtTelefono" type="number" class="limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                <input id="txtTelefono" type="number" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
                 <label class="mb-2 campo4">Correo: </label>
-                <input id="txtCorreo" type="email" class="limpiarCampo habilitarCampo deshabilitarCampo mb-2" />
+                <input id="txtCorreo" type="email" class="form-control limpiarCampo habilitarCampo deshabilitarCampo mb-2" />
                 <label class="mb-2 campo3">Obra Social: </label>
-                <input id="txtObraSocial" min="1" max="10" type="number" class="limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                <select id="comboOS" class="form-select limpiarCampo habilitarCampo deshabilitarCampo required mb-2">
+
+                </select>
             </div>
             <div class="modal-footer">
                 <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -63,4 +71,4 @@
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
 <script src="~/Scripts/jquery-ui.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-<script src="~/Scripts/pacientes.js"></script>
+<script src="~/Scripts/personas.js"></script>

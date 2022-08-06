@@ -18,13 +18,21 @@ namespace ConsultorioMVC.Controllers
             DataClasesDataContext bd = new DataClasesDataContext();
             var lista = bd.ObrasSociales.Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(lista, JsonRequestBehavior.AllowGet);
-        } 
+        }
+        public JsonResult getHabilitadas()
+        {
+            DataClasesDataContext bd = new DataClasesDataContext();
+            var lista = bd.ObrasSociales.Where(p=> p.habilitada).Select(p => new { p.id, p.nombre, p.habilitada });
+            return Json(lista, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult getOne(int id)
         {
             DataClasesDataContext bd = new DataClasesDataContext();
             var lista = bd.ObrasSociales.Where(p => p.id.Equals(id)).Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
+
         public int save(ObrasSociales os)
         {
             DataClasesDataContext bd = new DataClasesDataContext();

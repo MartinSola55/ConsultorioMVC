@@ -1,16 +1,16 @@
 ﻿listar();
-llenarCombo();
+llenarCombo("filtroOS");
 let header = ["ID", "Nombre", "Apellido", "Teléfono", "Correo", "Obra Social"];
 
 function listar() {
-    $.get("../Pacientes/getAll", function (data) {
-        listadoPacientes(header, data);
+    $.get("../Personas/getAll", function (data) {
+        listadoPersonas(header, data);
     });
 }
 
-function listadoPacientes(arrayHeader, data) {
+function listadoPersonas(arrayHeader, data) {
     let contenido = "";
-    contenido += "<table id='tabla-generic' class='table table-dark table-striped table-bordered table-hover'>";
+    contenido += "<table id='tabla-generic' class='table table-oscura table-striped table-bordered table-hover'>";
     contenido += "<thead>";
     contenido += "<tr>";
     for (let i = 0; i < arrayHeader.length; i++) {
@@ -51,10 +51,10 @@ function listadoPacientes(arrayHeader, data) {
                     "next": "Siguiente",
                     "previous": "Anterior"
                 },
-                emptyTable: "No existen pacientes que coincidan con la búsqueda",
-                info: "Mostrando _START_ a _END_ de _TOTAL_ pacientes",
-                infoEmpty: "Mostrando 0 pacientes",
-                lengthMenu: "Mostrar _MENU_ pacientes",
+                emptyTable: "No existen personas que coincidan con la búsqueda",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ personas",
+                infoEmpty: "Mostrando 0 personas",
+                lengthMenu: "Mostrar _MENU_ personas",
             },
             columnDefs: [{
                 orderable: false,
@@ -65,10 +65,9 @@ function listadoPacientes(arrayHeader, data) {
     $("#tabla-generic").removeAttr("style");
 }
 
-
-function llenarCombo() {
+function llenarCombo(id) {
     $.get("../ObrasSociales/getAll", function (data) {
-        let control = $("#filtroOS");
+        let control = $("#" + id);
         let contenido = "";
         contenido += "<option value='' disabled selected >--Seleccione una opción--</option>";
         for (let i = 0; i < data.length; i++) {
@@ -85,12 +84,12 @@ jQuery('#filtroNombre').on('input', function () {
     let apellido = $("#filtroApellido").val();
     let os = $("#filtroOS").val();
     if (os == null) {
-        $.get("../Pacientes/buscarPacientesNombreApellido/?nombre=" + nombre + "&apellido=" + apellido, function (data) {
-            listadoPacientes(header, data);
+        $.get("../Personas/buscarPersonasNombreApellido/?nombre=" + nombre + "&apellido=" + apellido, function (data) {
+            listadoPersonas(header, data);
         });
     } else {
-        $.get("../Pacientes/buscarPacientesNombApOS/?nombre=" + nombre + "&apellido=" + apellido + "&os=" + os, function (data) {
-            listadoPacientes(header, data);
+        $.get("../Personas/buscarPersonasNombApOS/?nombre=" + nombre + "&apellido=" + apellido + "&os=" + os, function (data) {
+            listadoPersonas(header, data);
         });
     }
 });
@@ -99,13 +98,14 @@ jQuery('#filtroApellido').on('input', function () {
     let nombre = $("#filtroNombre").val();
     let apellido = $("#filtroApellido").val();
     let os = $("#filtroOS").val();
+    console.log(os);
     if (os == null) {
-        $.get("../Pacientes/buscarPacientesNombreApellido/?nombre=" + nombre + "&apellido=" + apellido, function (data) {
-            listadoPacientes(header, data);
+        $.get("../Personas/buscarPersonasNombreApellido/?nombre=" + nombre + "&apellido=" + apellido, function (data) {
+            listadoPersonas(header, data);
         });
     } else {
-        $.get("../Pacientes/buscarPacientesNombApOS/?nombre=" + nombre + "&apellido=" + apellido + "&os=" + os, function (data) {
-            listadoPacientes(header, data);
+        $.get("../Personas/buscarPersonasNombApOS/?nombre=" + nombre + "&apellido=" + apellido + "&os=" + os, function (data) {
+            listadoPersonas(header, data);
         });
     }
 });
@@ -114,8 +114,8 @@ jQuery('#filtroOS').on('change', function () {
     let nombre = $("#filtroNombre").val();
     let apellido = $("#filtroApellido").val();
     let os = $("#filtroOS").val();
-    $.get("../Pacientes/buscarPacientesNombApOS/?nombre=" + nombre + "&apellido=" + apellido + "&os=" + os, function (data) {
-        listadoPacientes(header, data);
+    $.get("../Personas/buscarPersonasNombApOS/?nombre=" + nombre + "&apellido=" + apellido + "&os=" + os, function (data) {
+        listadoPersonas(header, data);
     });
 });
 
@@ -129,35 +129,38 @@ jQuery('#limpia-filtro').on('click', function () {
 jQuery('#btnAgregar').on('click', function () {
     limpiarCampos();
     habilitarCampos();
-    $("#staticBackdropLabel").text("Agregar paciente");
+    llenarCombo("comboOS");
+    $("#staticBackdropLabel").text("Agregar persona");
 });
 
 function modalEdit(id) {
-    $("#staticBackdropLabel").text("Editar paciente");
+    $("#staticBackdropLabel").text("Editar persona");
     limpiarCampos();
     habilitarCampos();
-    $.get("../Pacientes/getOne/?id=" + id, function (data) {
+    llenarCombo("comboOS");
+    $.get("../Personas/getOne/?id=" + id, function (data) {
         $("#txtID").val(data[0]['id']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#txtApellido").val(data[0]['apellido']);
         $("#txtTelefono").val(data[0]['telefono']);
         $("#txtCorreo").val(data[0]['correo']);
-        $("#txtObraSocial").val(data[0]['obra_social_id']);
+        $("#comboOS").val(data[0]['obra_social_id']);
     });
 }
 
 function modalDelete(id) {
-    $("#staticBackdropLabel").text("Eliminar obra social");
+    $("#staticBackdropLabel").text("Eliminar persona");
     limpiarCampos();
     deshabilitarCampos();
+    llenarCombo("comboOS");
     $("#btnAceptar").addClass("eliminar");
-    $.get("../Pacientes/getOne/?id=" + id, function (data) {
+    $.get("../Personas/getOne/?id=" + id, function (data) {
         $("#txtID").val(data[0]['id']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#txtApellido").val(data[0]['apellido']);
         $("#txtTelefono").val(data[0]['telefono']);
         $("#txtCorreo").val(data[0]['correo']);
-        $("#txtObraSocial").val(data[0]['obra_social_id']);
+        $("#comboOS").val(data[0]['obra_social_id']);
     });
     let frm = new FormData();
     frm.append("id", id);
@@ -188,7 +191,7 @@ function confirmarCambios() {
         let apellido = $("#txtApellido").val();
         let telefono = $("#txtTelefono").val();
         let correo = $("#txtCorreo").val();
-        let obraSocial = $("#txtObraSocial").val();
+        let obraSocial = $("#comboOS").val();
         frm.append("id", id);
         frm.append("nombre", nombre);
         frm.append("apellido", apellido);
@@ -196,11 +199,11 @@ function confirmarCambios() {
         frm.append("correo", correo);
         frm.append("obra_social_id", obraSocial);
         if ($("#btnAceptar").hasClass("eliminar")) {
-            if (confirm("¿Seguro que desea eliminar el paciente?") == 1) {
-                crudPaciente(frm, "delete");
+            if (confirm("¿Seguro que desea eliminar la persona?") == 1) {
+                crudPersona(frm, "delete");
             }
         } else {
-            crudPaciente(frm, "save");
+            crudPersona(frm, "save");
         }
     }
 }
@@ -219,10 +222,10 @@ function campoRequired() {
     return valido;
 }
 
-function crudPaciente(frm, action) {
+function crudPersona(frm, action) {
     $.ajax({
         type: "POST",
-        url: "../Pacientes/" + action,
+        url: "../Personas/" + action,
         data: frm,
         contentType: false,
         processData: false,
@@ -230,12 +233,11 @@ function crudPaciente(frm, action) {
             if (data != 0) {
                 listar();
                 if ($("#btnAceptar").hasClass("eliminar")) {
-                    alert("El paciente se eliminó correctamente");
+                    alert("La persona se eliminó correctamente");
                 } else {
-                    alert("El paciente se guardó correctamente");
+                    alert("La persona se guardó correctamente");
                 }
                 $("#btnCancelar").click();
-
             } else {
                 alert("Los cambios no se guardaron. Error en la base de datos");
             }

@@ -11,24 +11,25 @@
     <link rel="icon" type="image/jpg" href="~/favicon.png" />
 </head>
 <body>
-    <div class="navbar navbar-dark bg-dark navbar-inverse fixed-top py-3">
+    <div id="navbar" class="navbar navbar-dark bg-dark navbar-inverse fixed-top py-3">
             <div class="navbar-header">
                 <a class="navbar-brand ms-4" href="/Pacientes">
                     <img src="~/logo1.png" alt="Logo" width="300" height="40">
                 </a>
                 @Html.ActionLink("Obras sociales", "Inicio", "ObrasSociales", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Pacientes", "Inicio", "Pacientes", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Turnos", "Index", "Turnos", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Personas", "Inicio", "Personas", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Turnos", "Inicio", "Turnos", new { area = "" }, new { @class = "navbar-brand" })
             </div>
     </div>
 
-    <div class="container-fluid body-content mt-5">
+    <div class="container-fluid body-content my-5">
         @RenderBody()
-        <hr />
-        <footer class="text-center bg-dark text-white fixed-bottom align-items-center py-4">
-            <p id="footerText" class="m-0" style="font-size: 1.1rem">&copy; @DateTime.Now.Year - Martín Sola</p>
-        </footer>
+        <hr class="mb-5"/>
+        <br />
     </div>
+    <footer class="text-center bg-dark text-white py-4">
+        <p id="footerText" class="m-0" style="font-size: 1.1rem">&copy; @DateTime.Now.Year - Martín Sola</p>
+    </footer>
 
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/modernizr-2.8.3.js"></script>
