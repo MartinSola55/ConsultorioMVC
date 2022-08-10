@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Pacientes";
+}
+
+<link href="~/Content/mis-estilos.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.structure.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.theme.min.css" rel="stylesheet" />
+
+<h1 class="text-center">Pacientes</h1>
+
+
+<div class="container-fluid">
+    <div class="container d-flex">
+        <div class="row me-4 col-3">
+            <label class="form-label">Ingrese el nombre: </label>
+            <input type="text" id="filtroNombre" class="form-control" placeholder="Nombre del paciente" />
+        </div>
+        <div class="row me-4 col-3">
+            <label class="form-label">Ingrese el apellido: </label>
+            <input type="text" id="filtroApellido" class="form-control" placeholder="Apellido del paciente" />
+        </div>
+        <div class="row me-4 col-3">
+            <label class="form-label">Ingrese la fecha de nacimiento: </label>
+            <input id="filtroNacimiento" class="form-control" placeholder="dd/mm/aaaa" />
+        </div>
+        <div class="row me-4 col-3">
+            <label class="form-label">Filtrar por obra social: </label>
+            <select id="filtroOS" class="form-select">
+            </select>
+        </div>
+    </div>
+
+    <div class="container d-flex justify-content-start mt-4 p-0">
+        <div class="d-flex align-items-end me-4">
+            <input type="button" class="btn btn-dark" id="buscar-filtro" value="Buscar" style="max-height:3rem" />
+        </div>
+        <div class="d-flex align-items-end">
+            <input type="button" class="btn btn-outline-dark" id="limpia-filtro" value="Limpiar" style="max-height:3rem" />
+        </div>
+    </div>
+
+    <div id="tabla-clase" class="mt-4">
+
+    </div>
+
+    <button id="btnAgregar" type="button" class="btn btn-success px-4 mt-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Agregar
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body contenedor-modal">
+                <label class="mb-2">ID: </label>
+                <input id="txtID" type="text" class="form-control limpiarCampo w-25 mb-2" disabled />
+                
+                <label class="mb-2 campo0">Nombre: </label>
+                <input id="txtNombre" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                
+                <label class="mb-2 campo1">Apellido: </label>
+                <input id="txtApellido" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                
+                <label class="mb-2 campo2">Teléfono: </label>
+                <input id="txtTelefono" type="tel" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                
+                <label class="mb-2 campo3">Dirección: </label>
+                <input id="txtDireccion" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                
+                <label class="mb-2 campo4">Localidad: </label>
+                <input id="txtLocalidad" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+
+                <label class="mb-2 campo5">Fecha de nacimiento: </label>
+                <input id="txtNacimiento" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+
+                <label class="mb-2 campo6">Obra Social: </label>
+                <select id="comboOS" class="form-select limpiarCampo habilitarCampo deshabilitarCampo required mb-2">
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnAceptar" onclick="confirmarCambios()" type="button" class="btn btn-success">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/datepicker-es.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script src="~/Scripts/pacientes.js"></script>

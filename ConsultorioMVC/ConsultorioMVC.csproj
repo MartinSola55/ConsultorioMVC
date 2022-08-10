@@ -86,6 +86,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\images\ui-bg_gloss-wave_20_111111_500x100.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\jquery-ui.min.css" />
@@ -129,6 +130,9 @@
     </None>
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\datepicker-es.js" />
+    <Content Include="Scripts\daterangepicker-es.js" />
+    <Content Include="Scripts\daterangepicker.js" />
+    <Content Include="Scripts\dias-horarios.js" />
     <Content Include="Scripts\genericos.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -136,15 +140,18 @@
     <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\obra-social.js" />
-    <Content Include="Scripts\personas.js" />
+    <Content Include="Scripts\pacientes.js" />
+    <Content Include="Scripts\historias-clinicas.js" />
     <Content Include="Scripts\turnos.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DiasHorariosController.cs" />
     <Compile Include="Controllers\ObrasSocialesController.cs" />
-    <Compile Include="Controllers\PersonasController.cs" />
+    <Compile Include="Controllers\PacientesController.cs" />
     <Compile Include="Controllers\TurnosController.cs" />
     <Compile Include="DataClases.designer.cs">
       <AutoGen>True</AutoGen>
@@ -155,9 +162,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DiaHorario.cs" />
+    <Compile Include="Models\HistoriaClinica.cs" />
     <Compile Include="Models\Horario.cs" />
     <Compile Include="Models\ObraSocial.cs" />
     <Compile Include="Models\Paciente.cs" />
+    <Compile Include="Models\Persona.cs" />
     <Compile Include="Models\Turno.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -192,8 +201,10 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\ObrasSociales\Inicio.cshtml" />
-    <Content Include="Views\Personas\Inicio.cshtml" />
+    <Content Include="Views\Pacientes\Inicio.cshtml" />
     <Content Include="Views\Turnos\Inicio.cshtml" />
+    <Content Include="Views\DiasHorarios\Inicio.cshtml" />
+    <Content Include="Views\Pacientes\DatosPaciente.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

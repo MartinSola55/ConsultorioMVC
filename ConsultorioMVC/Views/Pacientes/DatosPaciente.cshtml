@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "Datos del paciente";
+}
+
+<link href="~/Content/mis-estilos.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.structure.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.theme.min.css" rel="stylesheet" />
+
+<h1 class="text-center mb-4">Datos del paciente</h1>
+
+<div id="datos-paciente" class="container-fluid mt-5">
+    <label class="mb-2">Apellido: </label>
+    <input id="txtApellido" type="text" class="form-control mb-2" disabled />
+
+    <label class="mb-2">Teléfono: </label>
+    <input id="txtTelefono" type="tel" class="form-control mb-2" disabled />
+
+    <label class="mb-2">Nombre: </label>
+    <input id="txtNombre" type="text" class="form-control mb-2" disabled />
+
+    <label class="mb-2">Fecha de nacimiento: </label>
+    <input id="txtNacimiento" type="text" class="form-control mb-2" disabled />
+
+    <label class="mb-2">Dirección: </label>
+    <input id="txtDireccion" type="text" class="form-control mb-2" disabled />
+
+    <label class="mb-2">Obra Social: </label>
+    <input id="txtOS" type="text" class="form-control mb-2" disabled />
+
+    <label class="mb-2">Localidad: </label>
+    <input id="txtLocalidad" type="text" class="form-control mb-2" disabled />
+
+    <button id="btnAgregar" type="button" class="btn btn-success px-4 mt-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Agregar
+    </button>
+
+</div>
+
+<hr class="mt-5"/>
+
+<h2 class="text-center mb-4">Historias clínicas</h2>
+
+<div id="tarjetasHC" class="container d-flex flex-row row mx-auto justify-content-center">
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body contenedor-modal">
+                <label class="mb-2">ID: </label>
+                <input id="txtID" type="text" class="form-control limpiarCampo w-25 mb-2" disabled />
+
+                <label class="mb-2 campo0">Fecha: </label>
+                <input id="txtFecha" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+
+                <label class="mb-2 campo1">Descripción: </label>
+                <textarea id="txtDescripcion" cols="80" rows="20" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" style="height: 7rem"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnAceptar" onclick="confirmarCambios()" type="button" class="btn btn-success">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/datepicker-es.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script src="~/Scripts/historias-clinicas.js"></script>

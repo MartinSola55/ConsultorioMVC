@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Carga horarios";
+}
+
+<link href="~/Content/mis-estilos.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/daterangepicker.css" rel="stylesheet" />
+
+<h1 class="text-center">Carga de dias y horarios</h1>
+
+<div class="container">
+    <div class="row d-flex justify-content-between">
+        <div class="col-4">
+            <label class="form-label">Ingrese el rango de fechas: </label>
+            <input id="rangoFechas" class="form-control required" />
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+            <label class="form-label me-3 align-self-center">Seleccionar todo: </label>
+            <input type="checkbox" onclick="selectAll(this)" id="selecciona-todo" style='transform:scale(1.5)'>
+        </div>
+    </div>
+</div>
+
+<div id="tabla-dh" class="mt-4">
+
+</div>
+<button id="btnAceptar" onclick="confirmarCambios()" type="button" class="btn btn-success">Agregar</button>
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/moment-with-locales.js"></script>
+<script src="~/Scripts/daterangepicker.js"></script>
+<script src="~/Scripts/daterangepicker-es.js"></script>
+<script src="~/Scripts/dias-horarios.js"></script>

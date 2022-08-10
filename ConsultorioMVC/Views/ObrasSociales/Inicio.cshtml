@@ -7,32 +7,36 @@
 <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
 
 <h1 class="text-center">Obras Sociales</h1>
-<div class="container-fluid d-flex">
-    <div class="row me-4 col-3">
-        <label class="form-label">Ingrese el nombre: </label>
-        <input type="text" id="filtroNombre" class="form-control" placeholder="Obra social a buscar" />
+
+
+<div class="container">
+    <div class="container-fluid d-flex">
+        <div class="row me-4 col-3">
+            <label class="form-label">Ingrese el nombre: </label>
+            <input type="text" id="filtroNombre" class="form-control" placeholder="Obra social a buscar" />
+        </div>
+        <div class="row me-4 col-3">
+            <label class="form-label">Filtar por: </label>
+            <select id="filto-habilitado" class=" form-select">
+                <option value="" disabled selected>Seleccione una opción</option>
+                <option value="1">Habilitada</option>
+                <option value="0">Deshabilitada</option>
+            </select>
+        </div>
+        <div class="row d-flex align-items-end">
+            <input type="button" class="btn btn-outline-dark" id="limpia-filtro" value="Limpiar" style="max-height:3rem" />
+        </div>
     </div>
-    <div class="row me-4 col-3">
-        <label class="form-label">Filtar por: </label>
-        <select id="filto-habilitado" class=" form-select">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option value="1">Habilitada</option>
-            <option value="0">Deshabilitada</option>
-        </select>
+
+    <div id="tabla-clase" class="mt-4">
+
     </div>
-    <div class="row d-flex align-items-end">
-        <input type="button" class="btn btn-outline-dark" id="limpia-filtro" value="Limpiar" style="max-height:3rem" />
-    </div>
+
+
+    <button id="btnAgregar" type="button" class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Agregar
+    </button>
 </div>
-
-<div id="tabla-clase" class="mt-4">
-
-</div>
-
-
-<button id="btnAgregar" type="button" class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Agregar
-</button>
 
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

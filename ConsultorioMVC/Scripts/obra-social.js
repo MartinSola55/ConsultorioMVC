@@ -1,5 +1,5 @@
 ﻿listar();
-let header = ["ID", "Nombre", "Habilitada"];
+let header = ["Nombre", "Habilitada"];
 
 function listar() {
     $.get("../ObrasSociales/getAll", function (data) {
@@ -11,7 +11,7 @@ function listadoOS(arrayHeader, data) {
     let contenido = "";
     contenido += "<table id='tabla-generic' class='table table-oscura table-striped table-bordered table-hover'>";
     contenido += "<thead>";
-    contenido += "<tr>";
+    contenido += "<tr class='fw-bold'>";
     for (let i = 0; i < arrayHeader.length; i++) {
         contenido += "<td class='text-center'>";
         contenido += arrayHeader[i];
@@ -24,7 +24,6 @@ function listadoOS(arrayHeader, data) {
     for (let i = 0; i < data.length; i++) {
         let keyID = Object.keys(data[0])[0];
         contenido += "<tr>";
-        contenido += "<td class='text-center'>" + data[i].id + "</td>";
         contenido += "<td>" + data[i].nombre + "</td>";
         let habilitado = data[i].habilitada == 1 ? "Sí" : "No";
         contenido += "<td class='text-center'>" + habilitado + "</td>";

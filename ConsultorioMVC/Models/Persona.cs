@@ -5,15 +5,13 @@ using System.Web;
 
 namespace ConsultorioMVC.Models
 {
-    public class Paciente
+    public class Persona
     {
         public int ID { set; get; }
         public string Nombre { set; get; }
         public string Apellido { set; get; }
         public string Telefono { set; get; }
+        public string Correo { set; get; }
         public int IDObraSocial { set; get; }
-        public DateTime FechaNacimiento { get; set; }
-        public string Direccion { get; set; }
-        public string Localidad { get; set; }
     }
 }

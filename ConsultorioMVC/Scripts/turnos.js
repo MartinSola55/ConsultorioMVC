@@ -37,11 +37,11 @@ function listadoTurnos(arrayHeader, data) {
     contenido += "<thead>";
     contenido += "<tr class='fw-bold'>";
     for (let i = 0; i < arrayHeader.length; i++) {
-        contenido += "<td class='text-center table-head'>";
+        contenido += "<td class='text-center'>";
         contenido += arrayHeader[i];
         contenido += "</td>";
     }
-    contenido += "<td class='no-sort text-center table-head''>Acción</td>";
+    contenido += "<td class='no-sort text-center'>Acción</td>";
     contenido += "</tr>";
     contenido += "</thead>";
     contenido += "<tbody>";
@@ -236,6 +236,7 @@ function crudTurno(frm, action) {
         data: frm,
         contentType: false,
         processData: false,
+        dataType: 'json',
         success: function (data) {
             if (data != 0) {
                 listarInicial();
