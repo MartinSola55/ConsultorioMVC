@@ -154,13 +154,45 @@ namespace ConsultorioMVC.Controllers
                     turnoActual.persona_id = turno.persona_id;
                     turnoActual.dia_horario_id = diaH.id;
 
-                    diaHOld.disponible = true;
+                    if (diaHOld.id != diaH.id)
+                    {
+                        diaHOld.disponible =  true;
+                    }
 
                     bd.SubmitChanges();
                     regAfectados = 1;
                 }
             }
             catch (Exception e)
+            {
+                regAfectados = 0;
+            }
+            return regAfectados;
+        }
+        public int delete(Turno turno)
+        {
+            DataClasesDataContext bd = new DataClasesDataContext();
+            int regAfectados = 0;
+            try
+            {
+                using (var transaccion = new TransactionScope())
+                {
+                    Turno tur = bd.Turnos.Where(t => t.id.Equals(turno.id)).First();
+                    bd.Turnos.DeleteOnSubmit(tur);
+                    bd.SubmitChanges();
+
+                    Persona per = bd.Personas.Where(p => p.id.Equals(turno.persona_id)).First();
+                    bd.Personas.DeleteOnSubmit(per);
+                    DiaHorario diaH = bd.DiaHorarios.Where(dh => dh.id.Equals(turno.dia_horario_id)).First();
+                    diaH.disponible = true;
+                    bd.SubmitChanges();
+
+                    transaccion.Complete();
+                }
+
+                regAfectados = 1;
+            }
+            catch (Exception)
             {
                 regAfectados = 0;
             }
