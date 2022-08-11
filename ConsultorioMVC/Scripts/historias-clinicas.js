@@ -143,8 +143,6 @@ function crudHC(frm, action) {
             if (data != 0) {
                 if ($("#btnAceptar").hasClass("eliminar")) {
                     alert("La historia clínica se eliminó correctamente");
-                } else {
-                    alert("La historia clínica se guardó correctamente");
                 }
                 listarHC();
                 $("#btnCancelar").click();

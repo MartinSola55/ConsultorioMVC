@@ -33,18 +33,9 @@
       <Association Name="ObrasSociales_Paciente" Member="Pacientes" ThisKey="id" OtherKey="obra_social_id" Type="Paciente" />
     </Type>
   </Table>
-  <Table Name="dbo.Turnos" Member="Turnos">
-    <Type Name="Turno">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="persona_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="dia_horario_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="DiaHorario_Turno" Member="DiaHorario" ThisKey="dia_horario_id" OtherKey="id" Type="DiaHorario" IsForeignKey="true" />
-      <Association Name="Persona_Turno" Member="Persona" ThisKey="persona_id" OtherKey="id" Type="Persona" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Personas" Member="Personas">
     <Type Name="Persona">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="id" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="nombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="apellido" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="telefono" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
@@ -56,7 +47,7 @@
   </Table>
   <Table Name="dbo.Pacientes" Member="Pacientes">
     <Type Name="Paciente">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="id" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="nombre" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
       <Column Name="apellido" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
       <Column Name="telefono" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
@@ -75,6 +66,15 @@
       <Column Name="fecha" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Column Name="descripcion" Type="System.String" DbType="VarChar(1500)" CanBeNull="true" />
       <Association Name="Paciente_HistoriasClinica" Member="Paciente" ThisKey="paciente_id" OtherKey="id" Type="Paciente" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Turnos" Member="Turnos">
+    <Type Name="Turno">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="persona_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dia_horario_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="DiaHorario_Turno" Member="DiaHorario" ThisKey="dia_horario_id" OtherKey="id" Type="DiaHorario" IsForeignKey="true" />
+      <Association Name="Persona_Turno" Member="Persona" ThisKey="persona_id" OtherKey="id" Type="Persona" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

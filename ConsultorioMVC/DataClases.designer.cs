@@ -42,9 +42,6 @@ namespace ConsultorioMVC
     partial void InsertObrasSociales(ObrasSociales instance);
     partial void UpdateObrasSociales(ObrasSociales instance);
     partial void DeleteObrasSociales(ObrasSociales instance);
-    partial void InsertTurno(Turno instance);
-    partial void UpdateTurno(Turno instance);
-    partial void DeleteTurno(Turno instance);
     partial void InsertPersona(Persona instance);
     partial void UpdatePersona(Persona instance);
     partial void DeletePersona(Persona instance);
@@ -54,6 +51,9 @@ namespace ConsultorioMVC
     partial void InsertHistoriasClinica(HistoriasClinica instance);
     partial void UpdateHistoriasClinica(HistoriasClinica instance);
     partial void DeleteHistoriasClinica(HistoriasClinica instance);
+    partial void InsertTurno(Turno instance);
+    partial void UpdateTurno(Turno instance);
+    partial void DeleteTurno(Turno instance);
     #endregion
 		
 		public DataClasesDataContext() : 
@@ -118,14 +118,6 @@ namespace ConsultorioMVC
 			}
 		}
 		
-		public System.Data.Linq.Table<Turno> Turnos
-		{
-			get
-			{
-				return this.GetTable<Turno>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Persona> Personas
 		{
 			get
@@ -147,6 +139,14 @@ namespace ConsultorioMVC
 			get
 			{
 				return this.GetTable<HistoriasClinica>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Turno> Turnos
+		{
+			get
+			{
+				return this.GetTable<Turno>();
 			}
 		}
 	}
@@ -744,198 +744,6 @@ namespace ConsultorioMVC
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Turnos")]
-	public partial class Turno : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private int _persona_id;
-		
-		private int _dia_horario_id;
-		
-		private EntityRef<DiaHorario> _DiaHorario;
-		
-		private EntityRef<Persona> _Persona;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void Onpersona_idChanging(int value);
-    partial void Onpersona_idChanged();
-    partial void Ondia_horario_idChanging(int value);
-    partial void Ondia_horario_idChanged();
-    #endregion
-		
-		public Turno()
-		{
-			this._DiaHorario = default(EntityRef<DiaHorario>);
-			this._Persona = default(EntityRef<Persona>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_persona_id", DbType="Int NOT NULL")]
-		public int persona_id
-		{
-			get
-			{
-				return this._persona_id;
-			}
-			set
-			{
-				if ((this._persona_id != value))
-				{
-					if (this._Persona.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onpersona_idChanging(value);
-					this.SendPropertyChanging();
-					this._persona_id = value;
-					this.SendPropertyChanged("persona_id");
-					this.Onpersona_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dia_horario_id", DbType="Int NOT NULL")]
-		public int dia_horario_id
-		{
-			get
-			{
-				return this._dia_horario_id;
-			}
-			set
-			{
-				if ((this._dia_horario_id != value))
-				{
-					if (this._DiaHorario.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Ondia_horario_idChanging(value);
-					this.SendPropertyChanging();
-					this._dia_horario_id = value;
-					this.SendPropertyChanged("dia_horario_id");
-					this.Ondia_horario_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DiaHorario_Turno", Storage="_DiaHorario", ThisKey="dia_horario_id", OtherKey="id", IsForeignKey=true)]
-		public DiaHorario DiaHorario
-		{
-			get
-			{
-				return this._DiaHorario.Entity;
-			}
-			set
-			{
-				DiaHorario previousValue = this._DiaHorario.Entity;
-				if (((previousValue != value) 
-							|| (this._DiaHorario.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._DiaHorario.Entity = null;
-						previousValue.Turnos.Remove(this);
-					}
-					this._DiaHorario.Entity = value;
-					if ((value != null))
-					{
-						value.Turnos.Add(this);
-						this._dia_horario_id = value.id;
-					}
-					else
-					{
-						this._dia_horario_id = default(int);
-					}
-					this.SendPropertyChanged("DiaHorario");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Persona_Turno", Storage="_Persona", ThisKey="persona_id", OtherKey="id", IsForeignKey=true)]
-		public Persona Persona
-		{
-			get
-			{
-				return this._Persona.Entity;
-			}
-			set
-			{
-				Persona previousValue = this._Persona.Entity;
-				if (((previousValue != value) 
-							|| (this._Persona.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Persona.Entity = null;
-						previousValue.Turnos.Remove(this);
-					}
-					this._Persona.Entity = value;
-					if ((value != null))
-					{
-						value.Turnos.Add(this);
-						this._persona_id = value.id;
-					}
-					else
-					{
-						this._persona_id = default(int);
-					}
-					this.SendPropertyChanged("Persona");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Personas")]
 	public partial class Persona : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -983,7 +791,7 @@ namespace ConsultorioMVC
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int id
 		{
 			get
@@ -1242,7 +1050,7 @@ namespace ConsultorioMVC
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int id
 		{
 			get
@@ -1636,6 +1444,198 @@ namespace ConsultorioMVC
 						this._paciente_id = default(int);
 					}
 					this.SendPropertyChanged("Paciente");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Turnos")]
+	public partial class Turno : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _persona_id;
+		
+		private int _dia_horario_id;
+		
+		private EntityRef<DiaHorario> _DiaHorario;
+		
+		private EntityRef<Persona> _Persona;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void Onpersona_idChanging(int value);
+    partial void Onpersona_idChanged();
+    partial void Ondia_horario_idChanging(int value);
+    partial void Ondia_horario_idChanged();
+    #endregion
+		
+		public Turno()
+		{
+			this._DiaHorario = default(EntityRef<DiaHorario>);
+			this._Persona = default(EntityRef<Persona>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_persona_id", DbType="Int NOT NULL")]
+		public int persona_id
+		{
+			get
+			{
+				return this._persona_id;
+			}
+			set
+			{
+				if ((this._persona_id != value))
+				{
+					if (this._Persona.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onpersona_idChanging(value);
+					this.SendPropertyChanging();
+					this._persona_id = value;
+					this.SendPropertyChanged("persona_id");
+					this.Onpersona_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dia_horario_id", DbType="Int NOT NULL")]
+		public int dia_horario_id
+		{
+			get
+			{
+				return this._dia_horario_id;
+			}
+			set
+			{
+				if ((this._dia_horario_id != value))
+				{
+					if (this._DiaHorario.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Ondia_horario_idChanging(value);
+					this.SendPropertyChanging();
+					this._dia_horario_id = value;
+					this.SendPropertyChanged("dia_horario_id");
+					this.Ondia_horario_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DiaHorario_Turno", Storage="_DiaHorario", ThisKey="dia_horario_id", OtherKey="id", IsForeignKey=true)]
+		public DiaHorario DiaHorario
+		{
+			get
+			{
+				return this._DiaHorario.Entity;
+			}
+			set
+			{
+				DiaHorario previousValue = this._DiaHorario.Entity;
+				if (((previousValue != value) 
+							|| (this._DiaHorario.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._DiaHorario.Entity = null;
+						previousValue.Turnos.Remove(this);
+					}
+					this._DiaHorario.Entity = value;
+					if ((value != null))
+					{
+						value.Turnos.Add(this);
+						this._dia_horario_id = value.id;
+					}
+					else
+					{
+						this._dia_horario_id = default(int);
+					}
+					this.SendPropertyChanged("DiaHorario");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Persona_Turno", Storage="_Persona", ThisKey="persona_id", OtherKey="id", IsForeignKey=true)]
+		public Persona Persona
+		{
+			get
+			{
+				return this._Persona.Entity;
+			}
+			set
+			{
+				Persona previousValue = this._Persona.Entity;
+				if (((previousValue != value) 
+							|| (this._Persona.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Persona.Entity = null;
+						previousValue.Turnos.Remove(this);
+					}
+					this._Persona.Entity = value;
+					if ((value != null))
+					{
+						value.Turnos.Add(this);
+						this._persona_id = value.id;
+					}
+					else
+					{
+						this._persona_id = default(int);
+					}
+					this.SendPropertyChanged("Persona");
 				}
 			}
 		}

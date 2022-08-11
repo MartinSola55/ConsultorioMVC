@@ -27,7 +27,7 @@ namespace ConsultorioMVC.Controllers
                         join osoc in bd.ObrasSociales
                             on p.obra_social_id equals osoc.id
                             into pac
-                        from obraSoc in pac.DefaultIfEmpty()
+                            from obraSoc in pac.DefaultIfEmpty()
                         where p.id == id
                         select new
                         {
@@ -47,9 +47,10 @@ namespace ConsultorioMVC.Controllers
         {
             DataClasesDataContext bd = new DataClasesDataContext();
             var paciente = from p in bd.Pacientes
-                            join osoc in bd.ObrasSociales on p.obra_social_id equals osoc.id
-                            into pac
-                            from obraSoc in pac.DefaultIfEmpty()
+                            join osoc in bd.ObrasSociales
+                                on p.obra_social_id equals osoc.id
+                                into pac
+                                from obraSoc in pac.DefaultIfEmpty()
                             where p.id == id
                             select new
                             {
@@ -91,7 +92,7 @@ namespace ConsultorioMVC.Controllers
                     regAfectados = 1;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 regAfectados = 0;
             }
@@ -118,9 +119,10 @@ namespace ConsultorioMVC.Controllers
         {
             DataClasesDataContext bd = new DataClasesDataContext();
             var pacientes = from p in bd.Pacientes
-                            join osoc in bd.ObrasSociales on p.obra_social_id equals osoc.id
-                            into paciente
-                            from obraSoc in paciente.DefaultIfEmpty()
+                            join osoc in bd.ObrasSociales
+                                on p.obra_social_id equals osoc.id
+                                into paciente
+                                from obraSoc in paciente.DefaultIfEmpty()
                             select new
                             {
                                 id = p.id,
@@ -133,12 +135,8 @@ namespace ConsultorioMVC.Controllers
                                 obra_social_id = p.obra_social_id,
                                 nombreOS = obraSoc.nombre
                             };
-
-            if (os == 0 && nacimiento == "")
-            {
-                pacientes = pacientes.Where(p => p.nombre.Contains(nombre) && p.apellido.Contains(apellido));
-            }
-            else if (os == 0)
+            string fechaFormated = "";
+            if (nacimiento != "")
             {
                 DateTime fecha = Convert.ToDateTime(nacimiento);
                 string dia = fecha.Day.ToString();
@@ -146,19 +144,28 @@ namespace ConsultorioMVC.Controllers
                 string mes = fecha.Month.ToString();
                 mes = mes.Length == 1 ? "0" + mes : mes;
                 string anio = fecha.Year.ToString();
-                string fechaOK = anio + "-" + mes + "-" + dia;
-
-                pacientes = from p in pacientes
-                            where p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.fecha_nac == fechaOK
-                            select p;
+                fechaFormated = anio + "-" + mes + "-" + dia;
             }
-            else if (nacimiento == "")
+            if (os != 0 || nacimiento != "" || nombre != "" || apellido != "")
             {
-                pacientes = pacientes.Where(p => p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.obra_social_id.Equals(os));
-            }
-            else
-            {
-                pacientes = pacientes.Where(p => p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.obra_social_id.Equals(os) && p.fecha_nac.Equals(nacimiento));
+                if (os == 0 && nacimiento == "")
+                {
+                    pacientes = pacientes.Where(p => p.nombre.Contains(nombre) && p.apellido.Contains(apellido));
+                }
+                else if (os == 0)
+                {
+                    pacientes = from p in pacientes
+                                where p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.fecha_nac == fechaFormated
+                                select p;
+                }
+                else if (nacimiento == "")
+                {
+                    pacientes = pacientes.Where(p => p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.obra_social_id.Equals(os));
+                }
+                else
+                {
+                    pacientes = pacientes.Where(p => p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.obra_social_id.Equals(os) && p.fecha_nac.Equals(fechaFormated));
+                }
             }
             return Json(pacientes, JsonRequestBehavior.AllowGet);
         }
@@ -167,7 +174,7 @@ namespace ConsultorioMVC.Controllers
             DataClasesDataContext bd = new DataClasesDataContext();
             var hist_clinicas = from hc in bd.HistoriasClinicas
                             where hc.paciente_id == id
-                            orderby hc.fecha
+                            orderby hc.fecha descending
                             select new
                             {
                                 idHC = hc.id,

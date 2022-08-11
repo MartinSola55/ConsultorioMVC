@@ -13,11 +13,44 @@ namespace ConsultorioMVC.Controllers
         {
             return View();
         }
+        public JsonResult getOne(int id)
+        {
+            DataClasesDataContext bd = new DataClasesDataContext();
+            var diaHorario = from dh in bd.DiaHorarios
+                        join h in bd.Horarios
+                            on dh.horario_id equals h.id
+                        where dh.id == id
+                        select new
+                        {
+                            id = dh.id,
+                            dia = dh.dia.ToShortDateString(),
+                            hora = h.hora.ToShortTimeString(),
+                        };
+            return Json(diaHorario, JsonRequestBehavior.AllowGet);
+        }
+        public int delete(DiaHorario dia_horario)
+        {
+            DataClasesDataContext bd = new DataClasesDataContext();
+            int regAfectados = 0;
+            try
+            {
+                DiaHorario dh = bd.DiaHorarios.Where(d => d.id.Equals(dia_horario.id)).First();
+                bd.DiaHorarios.DeleteOnSubmit(dh);
+                bd.SubmitChanges();
+                regAfectados = 1;
+            }
+            catch (Exception)
+            {
+                regAfectados = 0;
+            }
+            return regAfectados;
+        }
         public JsonResult getHoras(string dia)
         {
             DataClasesDataContext bd = new DataClasesDataContext();
             var horas = from dh in bd.DiaHorarios
-                        join h in bd.Horarios on dh.horario_id equals h.id
+                        join h in bd.Horarios
+                            on dh.horario_id equals h.id
                         where dh.dia == Convert.ToDateTime(dia)
                         && dh.disponible == true
                         select new

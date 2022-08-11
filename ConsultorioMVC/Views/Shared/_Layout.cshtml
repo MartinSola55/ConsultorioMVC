@@ -16,21 +16,23 @@
                 <a class="navbar-brand ms-4" href="/Pacientes">
                     <img src="~/logo1.png" alt="Logo" width="300" height="40">
                 </a>
-                @Html.ActionLink("Obras sociales", "Inicio", "ObrasSociales", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Pacientes", "Inicio", "Pacientes", new { area = "" }, new { @class = "navbar-brand" })
                 @Html.ActionLink("Turnos", "Inicio", "Turnos", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Pacientes", "Inicio", "Pacientes", new { area = "" }, new { @class = "navbar-brand" })
                 @Html.ActionLink("Cargar días", "Inicio", "DiasHorarios", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Obras sociales", "Inicio", "ObrasSociales", new { area = "" }, new { @class = "navbar-brand" })
             </div>
     </div>
 
-    <div class="container-fluid body-content my-5">
-        @RenderBody()
-        <hr class="mb-5"/>
-        <br />
+    <div id="page-container" class="mt-4">
+        <div id="content-wrap" class="container-fluid body-content">
+            @RenderBody()
+            <hr class="mb-1"/>
+            <br />
+        </div>
+        <footer id="footer" class="text-center bg-dark text-white d-flex align-items-center justify-content-center">
+            <p id="footerText" class="m-0" style="font-size: 1.1rem">&copy; @DateTime.Now.Year - Martín Sola</p>
+        </footer>
     </div>
-    <footer class="text-center bg-dark text-white py-4">
-        <p id="footerText" class="m-0" style="font-size: 1.1rem">&copy; @DateTime.Now.Year - Martín Sola</p>
-    </footer>
 
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/modernizr-2.8.3.js"></script>

@@ -171,7 +171,7 @@ function limpiarCampos() {
     $(".limpiarCampo").val("");
     campos = $(".required");
     for (let i = 0; i < campos.length; i++) {
-        $(".campo" + i).removeClass("error");
+        $("#campo" + i).removeClass("error");
     }
     $("#btnAceptar").removeClass("eliminar");
 }
@@ -217,11 +217,11 @@ function campoRequired() {
     let valido = true;
     campos = $(".required");
     for (let i = 0; i < campos.length; i++) {
-        if (campos[i].value == "") {
+        if (campos[i].value == "" || campos[i].value == "0") {
             valido = false;
-            $(".campo" + i).addClass("error");
+            $("#campo" + i).addClass("error");
         } else {
-            $(".campo" + i).removeClass("error");
+            $("#campo" + i).removeClass("error");
         }
     }
     return valido;
