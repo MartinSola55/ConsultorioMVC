@@ -158,17 +158,16 @@ function confirmarCambios() {
 }
 
 function campoRequired() {
-    let valido = true;
     campos = $(".required");
     for (let i = 0; i < campos.length; i++) {
         if (campos[i].value == "") {
-            valido = false;
             $(".campo" + i).addClass("error");
+            return false;
         } else {
             $(".campo" + i).removeClass("error");
         }
     }
-    return valido;
+    return true;
 }
 
 function crudOS(frm, action) {
@@ -179,7 +178,7 @@ function crudOS(frm, action) {
         contentType: false,
         processData: false,
         success: function (data) {
-            if (data != 0) {
+            if (data == 1) {
                 listar();
                 if ($("#btnAceptar").hasClass("eliminar")) {
                     alert("La obra social se eliminó correctamente");
@@ -188,6 +187,8 @@ function crudOS(frm, action) {
                 }
                 $("#btnCancelar").click();
 
+            } else if ( data == -1) {
+                alert("La obra social ingresada ya existe");
             } else {
                 alert("Los cambios no se guardaron. Error en la base de datos");
             }

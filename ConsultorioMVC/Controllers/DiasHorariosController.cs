@@ -60,10 +60,11 @@ namespace ConsultorioMVC.Controllers
                         };
             return Json(horas, JsonRequestBehavior.AllowGet);
         }
-        public int insert(string[] dias, int[] horas)
+        public JsonResult insert(string[] dias, int[] horas)
         {
             DataClasesDataContext bd = new DataClasesDataContext();
             int regAfectados = 0;
+            int regRepetidos = 0;
             try
             {
                 List<DiaHorario> diasHorarios = new List<DiaHorario>();
@@ -77,7 +78,18 @@ namespace ConsultorioMVC.Controllers
                             horario_id = h,
                             disponible = true
                         };
-                        diasHorarios.Add(dh);
+                        int repetido = bd.DiaHorarios
+                            .Where(diah => diah.dia.Equals(dh.dia)
+                            && diah.horario_id.Equals(dh.horario_id))
+                            .Count();
+                        if (repetido == 0)
+                        {
+                            diasHorarios.Add(dh);
+                        }
+                        else
+                        {
+                            regRepetidos++;
+                        }
                     }
                 };
                 foreach (DiaHorario diaH in diasHorarios)
@@ -90,8 +102,10 @@ namespace ConsultorioMVC.Controllers
             catch (Exception)
             {
                 regAfectados = 0;
+                regRepetidos = 0;
             }
-            return regAfectados;
+            int[] resultado = { regAfectados, regRepetidos };
+            return Json(resultado, JsonRequestBehavior.AllowGet);
         }
     }
 }

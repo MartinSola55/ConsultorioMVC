@@ -87,6 +87,7 @@ namespace ConsultorioMVC.Controllers
                             on dh.horario_id equals h.id
                         where dh.dia == Convert.ToDateTime(dia)
                         && (dh.disponible == true || h.id == hora)
+                        orderby h.hora ascending
                         select new
                         {
                             idHora = h.id,

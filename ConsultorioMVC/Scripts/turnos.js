@@ -32,7 +32,6 @@ jQuery('#datepicker').on('change', function () {
     });
 });
 
-
 function listadoTurnos(arrayHeader, data) {
     let contenido = "";
     contenido += "<table id='tabla-generic' class='container table table-oscura table-striped table-bordered table-hover'>";
@@ -111,16 +110,24 @@ jQuery('#btnAgregar').on('click', function () {
 });
 
 function llenarComboOS() {
+    $.get("../ObrasSociales/getParticular", function (data) {
+        let control = $("#comboOS");
+        let contenido = "";
+        contenido += "<option value='0' disabled selected >--Seleccione una obra social--</option>";
+        contenido += "<option value='" + data[0]['id'] + "'>";
+        contenido += data[0]['nombre'];
+        contenido += "</option>";
+        control.html(contenido);
+    });
     $.get("../ObrasSociales/getHabilitadas", function (data) {
         let control = $("#comboOS");
         let contenido = "";
-        contenido += "<option value='' disabled selected >--Seleccione una obra social--</option>";
         for (let i = 0; i < data.length; i++) {
             contenido += "<option value='" + data[i].id + "'>";
             contenido += data[i].nombre;
             contenido += "</option>";
         }
-        control.html(contenido);
+        control.append(contenido);
     });
 }
 
@@ -179,7 +186,7 @@ function modalDelete(id) {
 
 function turnoDelete(id) {
     $.get("../DiasHorarios/getOne/?id=" + id, function (data) {
-        if (confirm("¿Seguro desea eliminar el turno?\n\nDía: " + data[0].dia + "\nHora: " + data[0].hora)) {
+        if (confirm("¿Seguro desea eliminar el horario?\n\nDía: " + data[0].dia + "\nHora: " + data[0].hora)) {
             let frm = new FormData();
             let id = data[0].id;
             frm.append("id", id);
@@ -207,17 +214,16 @@ function deshabilitarCampos() {
 }
 
 function campoRequired() {
-    let valido = true;
     campos = $(".required");
     for (let i = 0; i < campos.length; i++) {
         if (campos[i].value == "") {
-            valido = false;
             $(".campo" + i).addClass("error");
+          return false;
         } else {
             $(".campo" + i).removeClass("error");
         }
     }
-    return valido;
+    return true;
 }
 
 function confirmarCambios() {

@@ -16,41 +16,59 @@ namespace ConsultorioMVC.Controllers
         public JsonResult getAll()
         {
             DataClasesDataContext bd = new DataClasesDataContext();
-            var lista = bd.ObrasSociales.Select(p => new { p.id, p.nombre, p.habilitada });
+            var lista = bd.ObrasSociales.Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p => p.nombre);
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
         public JsonResult getHabilitadas()
         {
             DataClasesDataContext bd = new DataClasesDataContext();
-            var lista = bd.ObrasSociales.Where(p=> p.habilitada).Select(p => new { p.id, p.nombre, p.habilitada });
+            var lista = bd.ObrasSociales.Where(p=> p.habilitada && !p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p => p.nombre);
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
-
         public JsonResult getOne(int id)
         {
             DataClasesDataContext bd = new DataClasesDataContext();
             var lista = bd.ObrasSociales.Where(p => p.id.Equals(id)).Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
-
+        public JsonResult getParticular()
+        {
+            DataClasesDataContext bd = new DataClasesDataContext();
+            var particular = bd.ObrasSociales.Where(p => p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada });
+            return Json(particular, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getResto()
+        {
+            DataClasesDataContext bd = new DataClasesDataContext();
+            var resto = bd.ObrasSociales.Where(p => !p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p=> p.nombre);
+            return Json(resto, JsonRequestBehavior.AllowGet);
+        }
         public int save(ObrasSociales os)
         {
             DataClasesDataContext bd = new DataClasesDataContext();
             int regAfectados = 0;
             try
             {
-                if (os.id == 0)
+                int repetido = bd.ObrasSociales
+                    .Where(p => p.nombre.Equals(os.nombre)).Count();
+                if (repetido == 0)
                 {
-                    bd.ObrasSociales.InsertOnSubmit(os);
-                    bd.SubmitChanges();
-                    regAfectados = 1;
+                    if (os.id == 0)
+                    {
+                        bd.ObrasSociales.InsertOnSubmit(os);
+                        bd.SubmitChanges();
+                        regAfectados = 1;
+                    } else
+                    {
+                        ObrasSociales osOld =  bd.ObrasSociales.Where(p => p.id.Equals(os.id)).First();
+                        osOld.nombre = os.nombre;
+                        osOld.habilitada = os.habilitada;
+                        bd.SubmitChanges();
+                        regAfectados = 1;
+                    }
                 } else
                 {
-                    ObrasSociales osOld =  bd.ObrasSociales.Where(p => p.id.Equals(os.id)).First();
-                    osOld.nombre = os.nombre;
-                    osOld.habilitada = os.habilitada;
-                    bd.SubmitChanges();
-                    regAfectados = 1;
+                    regAfectados = -1;
                 }
             } catch (Exception)
             {

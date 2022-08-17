@@ -14,34 +14,9 @@ namespace ConsultorioMVC.Controllers
         {
             return View();
         }
-        public ActionResult DatosPaciente(int id)
+        public ActionResult DatosPaciente()
         {
-            Paciente paciente = this.getPaciente(id);
             return View();
-        }
-        private Paciente getPaciente(int id)
-        {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            Paciente paciente = new Paciente();
-            var dbPac = from p in bd.Pacientes
-                        join osoc in bd.ObrasSociales
-                            on p.obra_social_id equals osoc.id
-                            into pac
-                            from obraSoc in pac.DefaultIfEmpty()
-                        where p.id == id
-                        select new
-                        {
-                            id = p.id,
-                            nombre = p.nombre,
-                            apellido = p.apellido,
-                            telefono = p.telefono,
-                            direccion = p.direccion,
-                            localidad = p.localidad,
-                            fecha_nac = p.fecha_nacimiento.ToString(),
-                            obra_social_id = p.obra_social_id,
-                            nombreOS = obraSoc.nombre
-                        };
-            return paciente;
         }
         public JsonResult getOne(int id)
         {
@@ -72,24 +47,36 @@ namespace ConsultorioMVC.Controllers
             int regAfectados = 0;
             try
             {
-                if (paciente.id == 0)
+                int repetido = bd.Pacientes
+                        .Where(p => p.nombre.Contains(paciente.nombre)
+                        && p.apellido.Contains(paciente.apellido)
+                        && p.fecha_nacimiento.Equals(paciente.fecha_nacimiento)
+                        && !p.id.Equals(paciente.id))
+                        .Count();
+                if (repetido == 0)
                 {
-                    bd.Pacientes.InsertOnSubmit(paciente);
-                    bd.SubmitChanges();
-                    regAfectados = 1;
-                }
-                else
+                    if (paciente.id == 0)
+                    {
+                        bd.Pacientes.InsertOnSubmit(paciente);
+                        bd.SubmitChanges();
+                        regAfectados = 1;
+                    }
+                    else
+                    {
+                        Paciente pacienteOld = bd.Pacientes.Where(p => p.id.Equals(paciente.id)).First();
+                        pacienteOld.nombre = paciente.nombre;
+                        pacienteOld.apellido = paciente.apellido;
+                        pacienteOld.telefono = paciente.telefono;
+                        pacienteOld.direccion = paciente.direccion;
+                        pacienteOld.localidad = paciente.localidad;
+                        pacienteOld.fecha_nacimiento = paciente.fecha_nacimiento;
+                        pacienteOld.obra_social_id = paciente.obra_social_id;
+                        bd.SubmitChanges();
+                        regAfectados = 1;
+                    }
+                } else
                 {
-                    Paciente pacienteOld = bd.Pacientes.Where(p => p.id.Equals(paciente.id)).First();
-                    pacienteOld.nombre = paciente.nombre;
-                    pacienteOld.apellido = paciente.apellido;
-                    pacienteOld.telefono = paciente.telefono;
-                    pacienteOld.direccion = paciente.direccion;
-                    pacienteOld.localidad = paciente.localidad;
-                    pacienteOld.fecha_nacimiento = paciente.fecha_nacimiento;
-                    pacienteOld.obra_social_id = paciente.obra_social_id;
-                    bd.SubmitChanges();
-                    regAfectados = 1;
+                    regAfectados = -1;
                 }
             }
             catch (Exception e)

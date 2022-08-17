@@ -79,16 +79,24 @@ function formatDate(fecha) {
 }
 
 function llenarCombo(id) {
-    $.get("../ObrasSociales/getAll", function (data) {
+    $.get("../ObrasSociales/getParticular", function (data) {
         let control = $("#" + id);
         let contenido = "";
         contenido += "<option value='0' disabled selected >--Seleccione una opción--</option>";
+        contenido += "<option value='" + data[0]['id'] + "'>";
+        contenido += data[0]['nombre'];
+        contenido += "</option>";
+        control.html(contenido);
+    });
+    $.get("../ObrasSociales/getResto", function (data) {
+        let control = $("#" + id);
+        let contenido = "";
         for (let i = 0; i < data.length; i++) {
             contenido += "<option value='" + data[i].id + "'>";
             contenido += data[i].nombre;
             contenido += "</option>";
         }
-        control.html(contenido);
+        control.append(contenido);
     });
 }
 
@@ -214,17 +222,16 @@ function confirmarCambios() {
 }
 
 function campoRequired() {
-    let valido = true;
     campos = $(".required");
     for (let i = 0; i < campos.length; i++) {
         if (campos[i].value == "" || campos[i].value == "0") {
-            valido = false;
             $("#campo" + i).addClass("error");
+            return false;
         } else {
             $("#campo" + i).removeClass("error");
         }
     }
-    return valido;
+    return true;
 }
 
 function crudPaciente(frm, action) {
@@ -235,7 +242,7 @@ function crudPaciente(frm, action) {
         contentType: false,
         processData: false,
         success: function (data) {
-            if (data != 0) {
+            if (data == 1) {
                 if ($("#btnAceptar").hasClass("eliminar")) {
                     alert("El paciente se eliminó correctamente");
                 } else {
@@ -243,6 +250,8 @@ function crudPaciente(frm, action) {
                 }
                 $('#buscar-filtro').click();
                 $("#btnCancelar").click();
+            } else if (data == -1) {
+                alert("Ya existe un paciente con los datos ingresados");
             } else {
                 alert("Los cambios no se guardaron. Error en la base de datos");
             }

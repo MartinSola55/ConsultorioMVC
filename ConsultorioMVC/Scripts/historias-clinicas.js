@@ -140,11 +140,11 @@ function crudHC(frm, action) {
         contentType: false,
         processData: false,
         success: function (data) {
+            listarHC();
             if (data != 0) {
                 if ($("#btnAceptar").hasClass("eliminar")) {
                     alert("La historia clínica se eliminó correctamente");
                 }
-                listarHC();
                 $("#btnCancelar").click();
             } else {
                 alert("Los cambios no se guardaron. Error en la base de datos");
