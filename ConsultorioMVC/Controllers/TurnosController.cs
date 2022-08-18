@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsultorioMVC.Filter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +8,7 @@ using System.Transactions;
 
 namespace ConsultorioMVC.Controllers
 {
+    [Seguridad]
     public class TurnosController : Controller
     {
         // GET: Turnos

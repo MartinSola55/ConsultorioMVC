@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Usuarios";
+}
+
+<link href="~/Content/mis-estilos.css" rel="stylesheet" />
+
+
+<h1 class="text-center">Usuarios</h1>
+
+<div class="container">
+    <div class="container-fluid d-flex">
+        <div class="row me-4 col-5">
+            <label class="form-label">Ingrese el mail: </label>
+            <input type="email" id="filtroEmail" class="form-control" placeholder="Email a buscar" />
+        </div>
+        <div class="row d-flex align-items-end">
+            <input type="button" class="btn btn-outline-dark" id="limpia-filtro" value="Limpiar" style="max-height:3rem" />
+        </div>
+    </div>
+
+    <div id="tabla-clase" class="mt-4">
+
+    </div>
+
+    <div id="tabla-usuarios">
+
+    </div>
+
+    <button id="btnAgregar" type="button" class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Agregar
+    </button>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body contenedor-modal">
+                <label class="form-label align-self-center mb-2">ID: </label>
+                <input id="txtID" type="text" class="form-control limpiarCampo w-25 mb-2" disabled />
+
+                <label id="campo0" class="form-label align-self-center mb-2">Email: </label>
+                <input id="txtEmail" type="email" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+
+                <label id="campo1" class="lblPass form-label align-self-center mb-2">Contraseña: </label>
+                <input id="txtPass" type="password" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+
+                <label id="campo2" class="lblRepitePass form-label align-self-center mb-2">Repetir contraseña: </label>
+                <input id="txtRepitePass" type="password" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+
+                <button id="btnVerClave" class='btn btn-outline-primary oculto'><i id="iconVerClave" class='bi bi-eye'></i></button>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnAceptar" onclick="confirmarCambios()" type="button" class="btn btn-success">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script src="~/Scripts/usuarios.js"></script>

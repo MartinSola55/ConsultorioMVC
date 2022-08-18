@@ -42,3 +42,11 @@
 #datos-paciente label {
     align-self:center;
 }
+
+#btnVerClave {
+    width: fit-content;
+    display: flex;
+    justify-self: right;
+    margin-right: 3rem;
+    grid-column: 2;
+}

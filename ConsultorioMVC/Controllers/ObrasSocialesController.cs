@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsultorioMVC.Filter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +7,7 @@ using System.Web.Mvc;
 
 namespace ConsultorioMVC.Controllers
 {
+    [Seguridad]
     public class ObrasSocialesController : Controller
     {
         // GET: ObrasSociales
@@ -100,7 +102,6 @@ namespace ConsultorioMVC.Controllers
                 .Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(os, JsonRequestBehavior.AllowGet);
         }
-
         public JsonResult buscarObraSocialNombre(string nombre)
         {
             DataClasesDataContext bd = new DataClasesDataContext();

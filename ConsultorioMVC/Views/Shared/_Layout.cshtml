@@ -13,8 +13,8 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-custom navbar-mainbg">
-        <a class="navbar-brand navbar-logo me-5" href="/Pacientes">
-            <img src="~/logo1.png" alt="Logo" width="300" height="40">
+        <a class="navbar-brand navbar-logo" href="/Main">
+            <img src="~/logo1.png" alt="Logo" style="max-width: 300px; max-height: 40px">
         </a>
         <div id="navbtn">
             <button class="navbar-toggler btn-close-white" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,7 @@
             </button>
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto w-100">
                 <div class="hori-selector">
                     <div class="left"></div>
                     <div class="right"></div>
@@ -39,6 +39,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/ObrasSociales"><i class="bi bi-file-medical"></i>Obras sociales</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Usuarios"><i class="bi bi-person-bounding-box"></i>Usuarios</a>
+                </li>
+                <li >
+                    <a class="" href="/Login/CerrarSesion">Cerrar sesión</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -51,7 +57,7 @@
             <br />
         </div>
         <footer id="footer" class="text-center bg-dark text-white d-flex align-items-center justify-content-center">
-            <p id="footerText" class="m-0" style="font-size: 1.1rem">&copy; @DateTime.Now.Year - Martín Sola</p>
+            <p id="footerText" class="m-0" style="font-size: 1.1rem">Martín Sola - Todos los derechos reservados @DateTime.Now.Year &copy; </p>
         </footer>
     </div>
 

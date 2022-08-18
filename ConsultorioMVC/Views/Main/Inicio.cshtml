@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Inicio";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    string diaMin = Session["idUsuario"] == null ? @DateTime.Today.AddDays(1).ToShortDateString() : @DateTime.Today.ToShortDateString();
+}
+
+<link href="~/Content/daterangepicker.css" rel="stylesheet" />
+
+
+<div class="container sombra-fade">
+    <h1 class="text-center text-white">Solicitar un turno</h1>
+    <div>
+        <form class="container-fluid sombra" style="max-width: 600px">
+            <fieldset class="mx-auto mb-3 p-3" style="max-width: 550px">
+                <legend>Exclusivo para San Carlos Centro</legend>
+                <div>
+                    <p>➢ Lunes, martes, miércoles y viernes de 09:00 a 13:00 hs.</p>
+                    <p>➢ Para cancelar un turno, comunicarse telefónicamente al 03404-420923 / 3404-520532</p>
+                </div>
+                <div>
+                    <div>
+                        <label for="txtNombre" class="asterisco form-label mb-0">Nombre</label>
+                        <input id="txtNombre" class="form-control required" type="text" placeholder="Tu nombre" required>
+                        <br />
+                    </div>
+                    <div>
+                        <label for="txtApellido" class="asterisco form-label mb-0">Apellido</label>
+                        <input id="txtApellido" class="form-control required" type="text" placeholder="Tu apellido" required>
+                        <br />
+                    </div>
+                    <div>
+                        <label for="txtTelefono" class="asterisco form-label mb-0">Teléfono</label>
+                        <input id="txtTelefono" class="form-control required" type="tel" placeholder="Tu teléfono" required>
+                        <br />
+                    </div>
+                    <div>
+                        <label for="comboOS" class="asterisco form-label mb-0">Obra Social</label>
+                        <select id="comboOS" class="form-select required" required>
+                        </select>
+                        <br />
+                    </div>
+                    <div>
+                        <label for="datepicker" class="asterisco form-label mb-0">Día</label>
+                        <input id="datepicker" class="form-control required" type="text" placeholder="dd/mm/aaaa" min="@Html.Raw(diaMin)" max="@DateTime.Today.AddDays(11).ToShortDateString()" required>
+                        <br />
+                    </div>
+                    <div>
+                        <label for="comboHoras" class="asterisco form-label mb-0">Hora</label>
+                        <select id="comboHoras" class="form-select required" required>
+                            <option value="0" disabled selected>--Seleccione una hora--</option>
+                        </select>
+                        <br />
+                    </div>
+                    <div>
+                        <label class="form-label mb-0" for="txtEmail">Correo</label>
+                        <input id="txtEmail" class="form-control" type="email" placeholder="Recibirás un recordatorio">
+                        <br />
+                    </div>
+                </div><!-- Contenedor de los campos  -->
+                <div>
+                    <input type="button" class="btn btn-success mt-4" onclick="confirmarCambios()" value="Reservar turno">
+                </div>
+            </fieldset>
+        </form>
+    </div>     <!-- Cierra el formulario -->
+</div>
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/modernizr-2.8.3.js"></script>
+<script src="~/Scripts/moment-with-locales.js"></script>
+<script src="~/Scripts/daterangepicker.js"></script>
+<script src="~/Scripts/daterangepicker-es.js"></script>
+<script src="~/Scripts/main.js"></script>

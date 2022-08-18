@@ -103,12 +103,16 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\contacto.css" />
     <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\images\ui-bg_gloss-wave_20_111111_500x100.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jquery-ui.structure.min.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
+    <Content Include="Content\login.css" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\navbar-main.css" />
     <Content Include="Content\navbar.css" />
     <Content Include="favicon.png" />
     <Content Include="header.jpg" />
@@ -163,6 +167,8 @@
     <Content Include="Scripts\jquery-3.6.0.slim.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\navbar.js" />
@@ -170,19 +176,24 @@
     <Content Include="Scripts\pacientes.js" />
     <Content Include="Scripts\historias-clinicas.js" />
     <Content Include="Scripts\turnos.js" />
+    <Content Include="Scripts\usuarios.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DiasHorariosController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ObrasSocialesController.cs" />
     <Compile Include="Controllers\PacientesController.cs" />
+    <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\TurnosController.cs" />
+    <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DataClases.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DataClases.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Filter\Seguridad.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -208,6 +219,11 @@
     <Content Include="Views\Pacientes\DatosPaciente.cshtml" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
+    <Content Include="Views\Usuarios\Inicio.cshtml" />
+    <Content Include="Views\Login\Inicio.cshtml" />
+    <Content Include="Views\Shared\_MainLayout.cshtml" />
+    <Content Include="Views\Main\Inicio.cshtml" />
+    <Content Include="Views\Main\Contacto.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

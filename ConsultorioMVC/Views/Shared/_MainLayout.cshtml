@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Consultorio traumatológico</title>
+    <link href="~/Content/mis-estilos.css" rel="stylesheet" />
+    <link href="~/Content/main.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link href="~/Content/navbar-main.css" rel="stylesheet" />
+    <link rel="icon" type="image/jpg" href="~/favicon.png" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-custom navbar-mainbg">
+        <a class="navbar-brand navbar-logo" href="/Main">
+            <img src="~/logo1.png" alt="Logo" style="max-width: 300px; max-height: 40px">
+        </a>
+        <div id="navbtn">
+            <button class="navbar-toggler btn-close-white" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <div class="hori-selector">
+                    <div class="left"></div>
+                    <div class="right"></div>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Main/Inicio"><i class="bi bi-house"></i>Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Main/Contacto"><i class="bi bi-person-lines-fill"></i>Contactarme</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-clock"></i>Horarios</a>
+                </li>
+                @{
+                    if (Session["idUsuario"] != null)
+                    {
+                        @:<li class="nav-item">
+                            @:<a class="nav-link" href="/Turnos"><i class="bi bi-calendar3"></i>Turnos</a>
+                        @:</li>
+                        @:<li id="logout">
+                            @:<a class="" href="/Login/CerrarSesion">Cerrar sesión</a>
+                        @:</li>
+                    }
+                    else
+                    {
+                        @:<li id="login">
+                            @:<a class="" href="/Login">Iniciar sesión</a>
+                        @:</li>
+                    }
+                }
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div id="page-container" class="mt-4">
+            <div id="content-wrap" class="container-fluid body-content">
+                @RenderBody()
+                <br />
+            </div>
+        </div>
+    </main>
+    <footer id="footer" class="text-center bg-dark text-white d-flex align-items-center justify-content-center">
+        <p id="footerText" class="m-0" style="font-size: 1.1rem">Martín Sola - Todos los derechos reservados @DateTime.Now.Year &copy; </p>
+    </footer>
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/navbar.js"></script>
+</body>
+</html>
