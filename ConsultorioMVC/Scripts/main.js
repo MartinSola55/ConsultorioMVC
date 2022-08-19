@@ -67,15 +67,120 @@ function llenarComboH() {
     });
 }
 
-function campoRequired() {
-    campos = $("input[required]");
-    for (let i = 0; i < campos.length; i++) {
-        if (campos[i].value == "") {
-            alert("Por favor, completa todos los campos requeridos")
-            return false;
+const formulario = $("#formTurno");
+const inputs = $("#formTurno input[type!=button], select").toArray();
+
+const expresiones = {
+    nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
+    email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+    telefono: /^\d{7,14}$/, // 7 a 14 numeros.
+    numero: /^[0-9]{1,2}$/, // Numeros.
+    fecha: /^[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/, // fecha con formato dd/mm/aaaa.
+}
+
+const campos = {
+    nombre: false,
+    apellido: false,
+    telefono: false,
+    os: false,
+    fecha: false,
+    hora: false,
+    email: true
+}
+
+const validaForm = (e) => {
+    switch (e.target.id) {
+        case "txtNombre": {
+            if (validaCampos(expresiones.nombre, e.target, 'Nombre')) {
+                campos['nombre'] = true;
+            } else {
+                campos['nombre'] = false;
+            };
+            break;
+        }
+        case "txtApellido": {
+            if (validaCampos(expresiones.nombre, e.target, 'Apellido')) {
+                campos['apellido'] = true;
+            } else {
+                campos['apellido'] = false;
+            };
+            break;
+        }
+        case "txtTelefono": {
+            if (validaCampos(expresiones.telefono, e.target, 'Telefono')) {
+                campos['telefono'] = true;
+            } else {
+                campos['telefono'] = false;
+            };
+            break;
+        }
+        case "datepicker": {
+            if (validaCampos(expresiones.fecha, e.target, 'Fecha')) {
+                campos['fecha'] = true;
+            } else {
+                campos['fecha'] = false;
+            };
+            break;
+        }
+        case "txtEmail": {
+            if (validaCampos(expresiones.email, e.target, 'Email')) {
+                campos['email'] = true;
+            } else {
+                campos['email'] = false;
+            };
+            break;
         }
     }
-    return true;
+}
+
+let validaCampos = (expresion, input, campo) => {
+    if (campo == "Email" && $("#txtEmail").val() == "") {
+        $(`#container${campo}`).removeClass("formContainer-incorrecto");
+        $(`#container${campo}`).removeClass("formContainer-correcto");
+        $(`#container${campo} i`).removeClass("bi-x-circle-fill");
+        $(`#container${campo} i`).addClass("bi-check-circle-fill");
+        $(`#container${campo} .informaError`).css("display", "none");
+        return true;
+    }
+    if (expresion.test(input.value)) {
+        $(`#container${campo}`).removeClass("formContainer-incorrecto");
+        $(`#container${campo}`).addClass("formContainer-correcto");
+        $(`#container${campo} i`).removeClass("bi-x-circle-fill");
+        $(`#container${campo} i`).addClass("bi-check-circle-fill");
+        $(`#container${campo} .informaError`).css("display", "none");
+        return true;
+    } else {
+        $(`#container${campo}`).removeClass("formContainer-correcto");
+        $(`#container${campo}`).addClass("formContainer-incorrecto");
+        $(`#container${campo} i`).removeClass("bi-check-circle-fill");
+        $(`#container${campo} i`).addClass("bi-x-circle-fill");
+        $(`#container${campo} .informaError`).css("display", "block");
+        return false;
+    }
+};
+
+inputs.forEach((input) => {
+    input.addEventListener('keyup', validaForm );
+    input.addEventListener('blur', validaForm );
+    input.addEventListener('change', validaForm );
+});
+
+$("#comboOS").on('change', function () {
+    campos['os'] = $("#comboOS").val() == "0" ? false : true;
+});
+
+$("#comboHoras").on('change', function () {
+    campos['hora'] = $("#comboHoras").val() == "0" ? false : true;
+});
+
+
+function campoRequired() {
+    if (campos.nombre && campos.apellido && campos.telefono && campos.os && campos.fecha && campos.hora && campos.email) {
+        $("#errorMessage").removeClass("errorMessage-activo");
+        return true;
+    }
+    $("#errorMessage").addClass("errorMessage-activo");
+    return false;
 }
 
 function confirmarCambios() {
@@ -111,7 +216,7 @@ function saveTurno(frm) {
             if (data == 1) {
                 alert("El turno se guardó correctamente");
             } else {
-                alert("Los cambios no se guardaron. Error en la base de datos");
+                alert("El turno no se pudo asignar. Hubo un error en la base de datos");
             }
         }
     });

@@ -10,7 +10,7 @@
 <div class="container sombra-fade">
     <h1 class="text-center text-white">Solicitar un turno</h1>
     <div>
-        <form class="container-fluid sombra" style="max-width: 600px">
+        <form id="formTurno" class="formTurno container-fluid sombra" style="max-width: 600px">
             <fieldset class="mx-auto mb-3 p-3" style="max-width: 550px">
                 <legend>Exclusivo para San Carlos Centro</legend>
                 <div>
@@ -18,47 +18,71 @@
                     <p>➢ Para cancelar un turno, comunicarse telefónicamente al 03404-420923 / 3404-520532</p>
                 </div>
                 <div>
-                    <div>
-                        <label for="txtNombre" class="asterisco form-label mb-0">Nombre</label>
-                        <input id="txtNombre" class="form-control required" type="text" placeholder="Tu nombre" required>
-                        <br />
+                    <div id="containerNombre" class="formContainer">
+                        <label for="txtNombre" class="asterisco mb-0">Nombre</label>
+                        <div class="formInput">
+                            <input id="txtNombre" class="required" type="text" placeholder="Tu nombre" >
+                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        </div>
+                        <p class="informaError" style="display: none">Debes ingresar un nombre válido</p>
                     </div>
-                    <div>
-                        <label for="txtApellido" class="asterisco form-label mb-0">Apellido</label>
-                        <input id="txtApellido" class="form-control required" type="text" placeholder="Tu apellido" required>
-                        <br />
+                    <div id="containerApellido" class="formContainer">
+                        <label for="txtApellido" class="asterisco mb-0">Apellido</label>
+                        <div class="formInput">
+                            <input id="txtApellido" class="required" type="text" placeholder="Tu apellido" >
+                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        </div>
+                        <p class="informaError" style="display: none">Debes ingresar un apellido válido</p>
                     </div>
-                    <div>
-                        <label for="txtTelefono" class="asterisco form-label mb-0">Teléfono</label>
-                        <input id="txtTelefono" class="form-control required" type="tel" placeholder="Tu teléfono" required>
-                        <br />
+                    <div id="containerTelefono" class="formContainer">
+                        <label for="txtTelefono" class="asterisco mb-0">Teléfono</label>
+                        <div class="formInput">
+                            <input id="txtTelefono" class="required" type="tel" placeholder="Sin 15 ni 0" >
+                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        </div>
+                        <p class="informaError" style="display: none">Debes ingresar un teléfono válido</p>
                     </div>
-                    <div>
-                        <label for="comboOS" class="asterisco form-label mb-0">Obra Social</label>
-                        <select id="comboOS" class="form-select required" required>
-                        </select>
-                        <br />
+                    <div id="containerOS" class="formContainer">
+                        <label for="comboOS" class="asterisco mb-0">Obra Social</label>
+                        <div class="formInput">
+                            <select id="comboOS" class="required" >
+                            </select>
+                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        </div>
+                        <p class="informaError" style="display: none">Debes ingresar una obra social</p>
                     </div>
-                    <div>
-                        <label for="datepicker" class="asterisco form-label mb-0">Día</label>
-                        <input id="datepicker" class="form-control required" type="text" placeholder="dd/mm/aaaa" min="@Html.Raw(diaMin)" max="@DateTime.Today.AddDays(11).ToShortDateString()" required>
-                        <br />
+                    <div id="containerFecha" class="formContainer">
+                        <label for="datepicker" class="asterisco mb-0">Día</label>
+                        <div class="formInput">
+                            <input id="datepicker" class="required" type="text" placeholder="dd/mm/aaaa" min="@Html.Raw(diaMin)" max="@DateTime.Today.AddDays(11).ToShortDateString()" >
+                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        </div>
+                        <p class="informaError" style="display: none">Debes seleccionar una fecha</p>
                     </div>
-                    <div>
-                        <label for="comboHoras" class="asterisco form-label mb-0">Hora</label>
-                        <select id="comboHoras" class="form-select required" required>
-                            <option value="0" disabled selected>--Seleccione una hora--</option>
-                        </select>
-                        <br />
+                    <div id="containerHora" class="formContainer">
+                        <label for="comboHoras" class="asterisco mb-0">Hora</label>
+                        <div class="formInput">
+                            <select id="comboHoras" class="required" >
+                                <option value="0" disabled selected>--Seleccione una hora--</option>
+                            </select>
+                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        </div>
+                        <p class="informaError" style="display: none">Debes seleccionar una hora</p>
                     </div>
-                    <div>
+                    <div id="containerEmail" class="formContainer">
                         <label class="form-label mb-0" for="txtEmail">Correo</label>
-                        <input id="txtEmail" class="form-control" type="email" placeholder="Recibirás un recordatorio">
-                        <br />
+                        <div class="formInput">
+                            <input id="txtEmail" class="" type="email" placeholder="Recibirás un recordatorio">
+                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        </div>
+                        <p class="informaError" style="display: none">Debes ingresar un email válido</p>
                     </div>
                 </div><!-- Contenedor de los campos  -->
                 <div>
-                    <input type="button" class="btn btn-success mt-4" onclick="confirmarCambios()" value="Reservar turno">
+                    <input type="button" id="btnEnviar" class="btn btn-success mt-4" onclick="confirmarCambios()" value="Reservar turno" />
+                </div>
+                <div class="p-2 mt-4 errorMessage" id="errorMessage">
+                    <p class="my-auto text-center"><i class="bi bi-exclamation-triangle-fill"></i><b> Error: </b>Por favor, completa los datos requeridos</p>
                 </div>
             </fieldset>
         </form>
