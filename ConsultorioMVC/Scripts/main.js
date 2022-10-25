@@ -137,10 +137,14 @@ let validaCampos = (expresion, input, campo) => {
     if (campo == "Email" && $("#txtEmail").val() == "") {
         $(`#container${campo}`).removeClass("formContainer-incorrecto");
         $(`#container${campo}`).removeClass("formContainer-correcto");
-        $(`#container${campo} i`).removeClass("bi-x-circle-fill");
-        $(`#container${campo} i`).addClass("bi-check-circle-fill");
         $(`#container${campo} .informaError`).css("display", "none");
         return true;
+    }
+    if (input.value === "") {
+        $(`#container${campo}`).removeClass("formContainer-incorrecto");
+        $(`#container${campo}`).removeClass("formContainer-correcto");
+        $(`#container${campo} .informaError`).css("display", "none");
+        return false;
     }
     if (expresion.test(input.value)) {
         $(`#container${campo}`).removeClass("formContainer-incorrecto");
@@ -155,13 +159,13 @@ let validaCampos = (expresion, input, campo) => {
         $(`#container${campo} i`).removeClass("bi-check-circle-fill");
         $(`#container${campo} i`).addClass("bi-x-circle-fill");
         $(`#container${campo} .informaError`).css("display", "block");
-        return false;
     }
+    return false;
 };
 
 inputs.forEach((input) => {
     input.addEventListener('keyup', validaForm );
-    input.addEventListener('blur', validaForm );
+    //input.addEventListener('blur', validaForm );
     input.addEventListener('change', validaForm );
 });
 
