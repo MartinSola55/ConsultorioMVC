@@ -20,28 +20,54 @@ namespace ConsultorioMVC.Controllers
             Session["idUsuario"] = null;
             return RedirectToAction("Inicio", "Main");
         }
-        public int validar(string email, string pass)
+        /*public ActionResult Insertar()
         {
-            int valido;
+            string password = "Consultorio123";
+            string email = "fernandorsola@yahoo.com.ar";
+            DataClasesDataContext bd = new DataClasesDataContext();
+            SHA256Managed sha = new SHA256Managed();
+            byte[] passNoCifrada = Encoding.Default.GetBytes(password);
+            byte[] bytesCifrados = sha.ComputeHash(passNoCifrada);
+            string passCifrada = BitConverter.ToString(bytesCifrados).Replace("-", string.Empty);
+
+            Usuario user = new Usuario
+            {
+                email = email,
+                password = passCifrada
+            };
+
+            bd.Usuarios.InsertOnSubmit(user);
+            bd.SubmitChanges();
+
+            return View();
+        }*/
+        public ActionResult Validar(string email, string password)
+        {
             try
             {
+                //Cifrar contraseña
                 DataClasesDataContext bd = new DataClasesDataContext();
                 SHA256Managed sha = new SHA256Managed();
-                byte[] passNoCifrada = Encoding.Default.GetBytes(pass);
+                byte[] passNoCifrada = Encoding.Default.GetBytes(password);
                 byte[] bytesCifrados = sha.ComputeHash(passNoCifrada);
                 string passCifrada = BitConverter.ToString(bytesCifrados).Replace("-", string.Empty);
 
-                valido = bd.Usuarios.Where(u => u.email.Equals(email) && u.password.Equals(passCifrada)).Count();
+                Usuario user = bd.Usuarios.Where(u => u.email.Equals(email) && u.password.Equals(passCifrada)).FirstOrDefault();
                 
-                if (valido == 1)
+                if (user != null)
                 {
-                    Session["idUsuario"] = bd.Usuarios.Where(u => u.email.Equals(email) && u.password.Equals(passCifrada)).First().id;
+                    Session["idUsuario"] = user.id;
+                    return RedirectToAction("Inicio", "Turnos");
                 }
-            } catch (Exception e)
+                ViewBag.Error = 1;
+                ViewBag.Message = "Email y/o contraseña incorrectos";
+                return View("Inicio");
+            } catch (Exception ex)
             {
-                valido = 0;
+                ViewBag.Message = ex.Message;
+                ViewBag.Error = 2;
+                return View("Inicio");
             }
-            return valido;
         }
     }
 }

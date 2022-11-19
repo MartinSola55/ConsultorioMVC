@@ -10,23 +10,24 @@ namespace ConsultorioMVC.Models
     {
         public int ID { set; get; }
 
-        [Required]
-        [StringLength(30, ErrorMessage = "Debes añadir un nombre válido")]
+        [Required(ErrorMessage = "Debes añadir un nombre")]
+        [StringLength(30, ErrorMessage = "Debes añadir un nombre de menos de 30 caracteres")]
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u017F\s]+$", ErrorMessage = "Ingrese un nombre válido")]
         public string Nombre { set; get; }
 
-        [Required]
-        [StringLength(30, ErrorMessage = "Debes añadir un apellido válido")]
+        [Required(ErrorMessage = "Debes añadir un apellido")]
+        [StringLength(30, ErrorMessage = "Debes añadir un apellido de menos de 30 caracteres")]
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u017F\s]+$", ErrorMessage = "Ingrese un apellido válido")]
         public string Apellido { set; get; }
 
-        [Required]
+        [Required(ErrorMessage = "Debes añadir un teléfono")]
         [Phone(ErrorMessage = "Debes añadir un teléfono válido")]
         public string Telefono { set; get; }
 
         [EmailAddress(ErrorMessage = "Debes ingresar un formato de email válido")]
         public string Correo { set; get; }
 
-        [Required]
-        [RegularExpression("[0-9]", ErrorMessage = "Debes añadir una obra social válida")]
-        public int IDObraSocial { set; get; }
+        [Required(ErrorMessage = "Debes seleccionar una obra social")]
+        public Models.ObraSocial ObraSocial { set; get; }
     }
 }

@@ -3,94 +3,141 @@
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     string diaMin = Session["idUsuario"] == null ? @DateTime.Today.AddDays(1).ToShortDateString() : @DateTime.Today.ToShortDateString();
 }
+@model ConsultorioMVC.Models.Turno
 
 <link href="~/Content/daterangepicker.css" rel="stylesheet" />
 
+@{ if (ViewBag.Message != null)
+    {
+        if (ViewBag.Error == 1)
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column" id="NotifContainer" style="background-color: khaki;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" class="fw-bold text-center mb-3"><i class="bi bi-exclamation-triangle"></i>&nbsp;@ViewBag.Message</h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#staticBackdrop'></button>
+        }
+        else if (ViewBag.Error == 2)
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column" id="NotifContainer" style="background-color: crimson;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" class="fw-bold text-center text-white mb-3"><i class="bi bi-exclamation-diamond"></i>&nbsp;@ViewBag.Message</h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#staticBackdrop'></button>
+        }
+        else
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column px-5" id="NotifContainer" style="background-color: yellowgreen;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" style="color: black;" class="text-center fw-bold mb-3"><i class="bi bi-info-circle"></i>&nbsp;@ViewBag.Message</h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#staticBackdrop'></button>
+        }
+    }
+}
 
 <div class="container sombra-fade">
     <h1 class="text-center text-white">Solicitar un turno</h1>
     <div>
-        <form id="formTurno" class="formTurno container-fluid sombra" style="max-width: 600px">
-            <fieldset class="mx-auto mb-3 p-3" style="max-width: 550px">
-                <legend>Exclusivo para San Carlos Centro</legend>
-                <div>
-                    <p>➢ Lunes, martes, miércoles y viernes de 09:00 a 13:00 hs.</p>
-                    <p>➢ Para cancelar un turno, comunicarse telefónicamente al 03404-420923 / 3404-520532</p>
-                </div>
-                <div>
-                    <div id="containerNombre" class="formContainer">
-                        <label for="txtNombre" class="asterisco mb-0">Nombre</label>
-                        <div class="formInput">
-                            <input id="txtNombre" class="required" type="text" placeholder="Tu nombre" >
-                            <i class="validacionEstado bi bi-x-circle-fill"></i>
-                        </div>
-                        <p class="informaError" style="display: none">Debes ingresar un nombre válido</p>
+        @{
+            using (Html.BeginForm("Save", "Main", FormMethod.Post, new { @id = "formTurno", @class = "formTurno container-fluid sombra", @style = "max-width: 600px" }))
+            {
+                <fieldset class="mx-auto mb-3 p-3" style="max-width: 550px">
+                    <legend>Exclusivo para San Carlos Centro</legend>
+                    <div>
+                        <p>➢ Lunes, martes, miércoles y viernes de 09:00 a 13:00 hs.</p>
+                        <p>➢ Para cancelar un turno, comunicarse telefónicamente al 03404-420923 / 3404-520532</p>
                     </div>
-                    <div id="containerApellido" class="formContainer">
-                        <label for="txtApellido" class="asterisco mb-0">Apellido</label>
-                        <div class="formInput">
-                            <input id="txtApellido" class="required" type="text" placeholder="Tu apellido" >
-                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                    <div>
+                        <div id="containerNombre" class="formContainer">
+                            <label for="txtNombre" class="asterisco mb-0">Nombre</label>
+                            <div class="formInput">
+                                @Html.TextBoxFor(model => model.Persona.Nombre, new { @id = "txtNombre", @class = "required", @placeholder = "Tu nombre" })
+                                <i class="validacionEstado bi bi-x-circle-fill"></i>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Persona.Nombre, null, new { @class = "text-danger mb-4 mt-3" })
                         </div>
-                        <p class="informaError" style="display: none">Debes ingresar un apellido válido</p>
-                    </div>
-                    <div id="containerTelefono" class="formContainer">
-                        <label for="txtTelefono" class="asterisco mb-0">Teléfono</label>
-                        <div class="formInput">
-                            <input id="txtTelefono" class="required" type="tel" placeholder="Sin 15 ni 0" >
-                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        <div id="containerApellido" class="formContainer">
+                            <label for="txtApellido" class="asterisco mb-0">Apellido</label>
+                            <div class="formInput">
+                                @Html.TextBoxFor(model => model.Persona.Apellido, new { @id = "txtApellido", @class = "required", @placeholder = "Tu apellido" })
+                                <i class="validacionEstado bi bi-x-circle-fill"></i>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Persona.Apellido, null, new { @class = "text-danger mb-4 mt-3" })
                         </div>
-                        <p class="informaError" style="display: none">Debes ingresar un teléfono válido</p>
-                    </div>
-                    <div id="containerOS" class="formContainer">
-                        <label for="comboOS" class="asterisco mb-0">Obra Social</label>
-                        <div class="formInput">
-                            <select id="comboOS" class="required" >
-                            </select>
-                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        <div id="containerTelefono" class="formContainer">
+                            <label for="txtTelefono" class="asterisco mb-0">Teléfono</label>
+                            <div class="formInput">
+                                @Html.TextBoxFor(model => model.Persona.Telefono, new { @id = "txtTelefono", @class = "required", @placeholder = "Sin 0 ni 15" })
+                                <i class="validacionEstado bi bi-x-circle-fill"></i>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Persona.Telefono, null, new { @class = "text-danger mb-4 mt-3" })
                         </div>
-                        <p class="informaError" style="display: none">Debes ingresar una obra social</p>
-                    </div>
-                    <div id="containerFecha" class="formContainer">
-                        <label for="datepicker" class="asterisco mb-0">Día</label>
-                        <div class="formInput">
-                            <input id="datepicker" class="required" type="text" placeholder="dd/mm/aaaa" min="@Html.Raw(diaMin)" max="@DateTime.Today.AddDays(11).ToShortDateString()" >
-                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        <div id="containerOS" class="formContainer">
+                            <label for="comboOS" class="asterisco mb-0">Obra Social</label>
+                            <div class="formInput">
+                                @Html.DropDownListFor(model => model.Persona.ObraSocial.ID, new SelectList(ViewBag.listadoObrasSociales, "Value", "Text"), "--Seleccione una obra social--", new { @id = "comboOS", @class = "form-select required" })
+                                <i class="validacionEstado bi bi-x-circle-fill"></i>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Persona.ObraSocial.ID, null, new { @class = "text-danger mb-4 mt-3" })
                         </div>
-                        <p class="informaError" style="display: none">Debes seleccionar una fecha</p>
-                    </div>
-                    <div id="containerHora" class="formContainer">
-                        <label for="comboHoras" class="asterisco mb-0">Hora</label>
-                        <div class="formInput">
-                            <select id="comboHoras" class="required" >
-                                <option value="0" disabled selected>--Seleccione una hora--</option>
-                            </select>
-                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        <div id="containerFecha" class="formContainer">
+                            <label for="datepicker" class="asterisco mb-0">Día</label>
+                            <div class="formInput">
+                                @Html.TextBoxFor(model => model.DiaHorario.Dia, "{0:dd/MM/yyyy}", new { @id = "datepicker", @class = "required", @placeholder = "dd/mm/aaaa", @min = @Html.Raw(diaMin), @max = @DateTime.Today.AddDays(11).ToShortDateString() })
+                                <i class="validacionEstado bi bi-x-circle-fill"></i>
+                                <input style="display: none" type="text" id="confimaFecha" />
+                            </div>
+                            @Html.ValidationMessageFor(model => model.DiaHorario.Dia, null, new { @class = "text-danger mb-4 mt-3" })
                         </div>
-                        <p class="informaError" style="display: none">Debes seleccionar una hora</p>
-                    </div>
-                    <div id="containerEmail" class="formContainer">
-                        <label class="form-label mb-0" for="txtEmail">Correo</label>
-                        <div class="formInput">
-                            <input id="txtEmail" class="" type="email" placeholder="Recibirás un recordatorio">
-                            <i class="validacionEstado bi bi-x-circle-fill"></i>
+                        <div id="containerHora" class="formContainer">
+                            <label for="comboHoras" class="asterisco mb-0">Hora</label>
+                            <div class="formInput">
+                                @Html.DropDownListFor(model => model.DiaHorario.Horario.ID, new SelectList(ViewBag.listadoHorarios, "Value", "Text"), "--Seleccione una hora--", new { @id = "comboHoras", @class = "form-select required" })
+                                <i class="validacionEstado bi bi-x-circle-fill"></i>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.DiaHorario.Horario.ID, null, new { @class = "text-danger mb-4 mt-3" })
                         </div>
-                        <p class="informaError" style="display: none">Debes ingresar un email válido</p>
+                        <div id="containerEmail" class="formContainer">
+                            <label class="form-label mb-0" for="txtEmail">Correo</label>
+                            <div class="formInput">
+                                @Html.TextBoxFor(model => model.Persona.Correo, new { @id = "txtEmail", @type = "email", @placeholder = "Recibirás un recordatorio" })
+                                <i class="validacionEstado bi bi-x-circle-fill"></i>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Persona.Correo, null, new { @class = "text-danger mb-4 mt-3" })
+                        </div>
+                    </div><!-- Contenedor de los campos  -->
+                    <div>
+                        <input type="submit" id="btnEnviar" class="btn btn-success mt-4" value="Reservar turno" />
                     </div>
-                </div><!-- Contenedor de los campos  -->
-                <div>
-                    <input type="button" id="btnEnviar" class="btn btn-success mt-4" onclick="confirmarCambios()" value="Reservar turno" />
-                </div>
-                <div class="p-2 mt-4 errorMessage" id="errorMessage">
-                    <p class="my-auto text-center"><i class="bi bi-exclamation-triangle-fill"></i><b> Error: </b>Por favor, completa los datos requeridos</p>
-                </div>
-            </fieldset>
-        </form>
+                    <div class="p-2 mt-4 errorMessage" id="errorMessage">
+                        <p class="my-auto text-center"><i class="bi bi-exclamation-triangle-fill"></i><b> Error: </b>Por favor, completa los datos requeridos</p>
+                    </div>
+                </fieldset>
+            }
+        }
     </div>     <!-- Cierra el formulario -->
 </div>
 
-
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script src="~/Scripts/modernizr-2.8.3.js"></script>
 <script src="~/Scripts/moment-with-locales.js"></script>
 <script src="~/Scripts/daterangepicker.js"></script>

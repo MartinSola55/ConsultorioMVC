@@ -11,9 +11,13 @@ namespace ConsultorioMVC.Controllers
 {
     public class MainController : Controller
     {
+        DataClasesDataContext bd = new DataClasesDataContext();
+
         // GET: Main
         public ActionResult Inicio()
         {
+            ViewBag.listadoObrasSociales = listadoObrasSociales();
+            ViewBag.listadoHorarios = listadoHorarios();
             return View();
         }
         public ActionResult Contacto()
@@ -33,7 +37,6 @@ namespace ConsultorioMVC.Controllers
 
         public JsonResult getHoras(string dia)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var horas = from dh in bd.DiaHorarios
                         join h in bd.Horarios
                             on dh.horario_id equals h.id
@@ -49,34 +52,30 @@ namespace ConsultorioMVC.Controllers
         }
         public JsonResult getOSParticular()
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var particular = bd.ObrasSociales.Where(p => p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(particular, JsonRequestBehavior.AllowGet);
         }
         public JsonResult getOSHabilitadas()
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var lista = bd.ObrasSociales.Where(p => p.habilitada && !p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p => p.nombre);
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
-        public int saveTurno(Turno turno)
+        public ActionResult Save(Models.Turno turno)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            int regAfectados = 0;
             try
             {
                 Persona persona = new Persona
                 {
-                    nombre = toUpperFirst(turno.Persona.nombre),
-                    apellido = toUpperFirst(turno.Persona.apellido),
-                    telefono = toNumber(turno.Persona.telefono),
-                    obra_social_id = turno.Persona.obra_social_id,
-                    correo = turno.Persona.correo
+                    nombre = toUpperFirst(turno.Persona.Nombre),
+                    apellido = toUpperFirst(turno.Persona.Apellido),
+                    telefono = toNumber(turno.Persona.Telefono),
+                    obra_social_id = turno.Persona.ObraSocial.ID,
+                    correo = turno.Persona.Correo
                 };
 
                 var diaH = (from dh in bd.DiaHorarios
-                            where dh.dia == turno.DiaHorario.dia
-                            && dh.horario_id == turno.DiaHorario.horario_id
+                            where dh.dia == turno.DiaHorario.Dia
+                            && dh.horario_id == turno.DiaHorario.Horario.ID
                             select dh).FirstOrDefault();
                 diaH.disponible = false;
 
@@ -85,23 +84,73 @@ namespace ConsultorioMVC.Controllers
                     dia_horario_id = diaH.id
                 };
 
-                using (var transaccion = new TransactionScope())
+                var repetido = bd.Turnos.Where(t => t.DiaHorario.dia.Equals(turno.DiaHorario.Dia) && t.DiaHorario.horario_id.Equals(turno.DiaHorario.Horario.ID)).FirstOrDefault();
+                
+                if(repetido == null)
                 {
-                    bd.Personas.InsertOnSubmit(persona);
-                    bd.SubmitChanges();
+                    using (var transaccion = new TransactionScope())
+                    {
+                        bd.Personas.InsertOnSubmit(persona);
+                        bd.SubmitChanges();
 
-                    turnoNew.persona_id = persona.id;
-                    bd.Turnos.InsertOnSubmit(turnoNew);
-                    bd.SubmitChanges();
-                    transaccion.Complete();
+                        turnoNew.persona_id = persona.id;
+                        bd.Turnos.InsertOnSubmit(turnoNew);
+                        bd.SubmitChanges();
+                        transaccion.Complete();
+                    }
+                    ViewBag.Message = "Tu turno se guardó correctamente";
+                } else
+                {
+                    ViewBag.Message = "El turno ya ha sido otorgado";
+                    ViewBag.Error = 1;
                 }
-                regAfectados = 1;
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                ViewBag.Error = 2;
+            }
+            ViewBag.listadoObrasSociales = listadoObrasSociales();
+            ViewBag.listadoHorarios = listadoHorarios();
+            return View("Inicio");
+        }
+        public IEnumerable<SelectListItem> listadoObrasSociales()
+        {
+            IEnumerable<SelectListItem> lista = null;
+            try
+            {
+                IEnumerable<ObrasSociales> particular = bd.ObrasSociales.Where(o => o.nombre.Equals("PARTICULAR"));                
+                IEnumerable<ObrasSociales> obrasSociales = bd.ObrasSociales.ToList().OrderBy(o => o.nombre).Where(o => o.habilitada.Equals(true));
+
+                LinkedList<ObrasSociales> listado = new LinkedList<ObrasSociales>();
+                listado.AddFirst(new ObrasSociales { id = particular.First().id, nombre = particular.First().nombre});
+                foreach (var item in obrasSociales)
+                {
+                    listado.AddLast(new ObrasSociales { id = item.id, nombre = item.nombre });
+                }
+
+                lista = listado.Select(o => new SelectListItem { Text = o.nombre, Value = o.id.ToString() });
             }
             catch (Exception e)
             {
-                regAfectados = 0;
+
             }
-            return regAfectados;
+            return lista;
+        }
+        public IEnumerable<SelectListItem> listadoHorarios()
+        {
+            IEnumerable<SelectListItem> lista = null;
+            try
+            {
+                IEnumerable<Horario> horarios = bd.Horarios.ToList();
+                lista = horarios.Select(ho => new SelectListItem { Text = ho.hora.ToShortTimeString(), Value = ho.id.ToString() });
+            }
+            catch (Exception e)
+            {
+
+            }
+            return lista;
         }
     }
 }

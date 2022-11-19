@@ -1,4 +1,12 @@
-﻿.contenedor-modal {
+﻿#NotifContainer {
+    display: flex;
+    justify-content: center;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.contenedor-modal {
     display:grid;
     grid-template-columns: 30% 70%;
     justify-content:start;

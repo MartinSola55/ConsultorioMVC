@@ -9,11 +9,11 @@ hoy = dd + '/' + mm + '/' + yyyy;
 listarInicial(hoy);
 
 function listarInicial(dia) {
-
     $("#datepicker").val(dia);
     $.get("../Turnos/getAll/?dia=" + dia, function (data) {
         listadoTurnos(header, data);
     });
+    llenarComboOS();
 }
 
 $('#datepicker').datepicker();
@@ -52,24 +52,24 @@ function listadoTurnos(arrayHeader, data) {
         do {
             if (data.length != 0) {
                 for (let i = 0; i < data.length; i++) {
-                    if (data[i].hora == horas[p]) {
-                        contenido += "<td style='vertical-align: middle'>" + data[i].nombre + "</td>";
-                        contenido += "<td style='vertical-align: middle'>" + data[i].apellido + "</td>";
-                        contenido += "<td style='vertical-align: middle'>" + data[i].obraSocial + "</td>";
-                        contenido += "<td style='vertical-align: middle'>" + data[i].telefono + "</td>";
+                    if (data[i].DiaHorario.Horario.HoraString == horas[p]) {
+                        contenido += "<td style='vertical-align: middle'>" + data[i].Persona.Nombre + "</td>";
+                        contenido += "<td style='vertical-align: middle'>" + data[i].Persona.Apellido + "</td>";
+                        contenido += "<td style='vertical-align: middle'>" + data[i].Persona.ObraSocial.Nombre + "</td>";
+                        contenido += "<td style='vertical-align: middle'>" + data[i].Persona.Telefono + "</td>";
                         contenido += "<td style='vertical-align: middle' class='text-center'>" + horas[p] + "</td>";
-                        if (data[i].disponible == true) {
+                        if (data[i].DiaHorario.Disponible == true) {
                             contenido += "<td style='vertical-align: middle' class='text-center'>Sí</td>";
                             contenido += "<td style='vertical-align: middle' class='d-flex justify-content-center'>";
-                            contenido += "<button class='btn btn-outline-danger' onclick='turnoDelete(" + data[i].idDiaHorario + ")'><i class='bi bi-trash3'></i></button>";
+                            contenido += "<button class='btn btn-outline-danger' onclick='turnoDelete(" + data[i].DiaHorario.ID + ")'><i class='bi bi-trash3'></i></button>";
                             contenido += "</td>";
                         }
                         else {
-                        contenido += "<td style='vertical-align: middle' class='text-center'>No</td>";
-                        contenido += "<td style='vertical-align: middle' class='d-flex justify-content-center'>";
-                            contenido += "<button class='btn btn-outline-success me-4' onclick='modalEdit(" + data[i].idTurno + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-pencil-square'></i></button>";
-                            contenido += "<button class='btn btn-outline-danger ms-4' onclick='modalDelete(" + data[i].idTurno + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-trash3'></i></button>";
-                        contenido += "</td>";
+                            contenido += "<td style='vertical-align: middle' class='text-center'>No</td>";
+                            contenido += "<td style='vertical-align: middle' class='d-flex justify-content-center'>";
+                            contenido += "<button class='btn btn-outline-success me-4' onclick='modalEdit(" + data[i].ID + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-pencil-square'></i></button>";
+                            contenido += "<button class='btn btn-outline-danger ms-4' onclick='modalDelete(" + data[i].ID + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-trash3'></i></button>";
+                            contenido += "</td>";
                         }
                         contenido += "</tr>";
                         break;
@@ -105,29 +105,21 @@ jQuery('#btnAgregar').on('click', function () {
     $("#staticBackdropLabel").text("Agregar turno");
     limpiarCampos();
     habilitarCampos();
-    llenarComboOS();
     llenarComboH(0);
+    $("#comboOS").val("0");
 });
 
 function llenarComboOS() {
-    $.get("../ObrasSociales/getParticular", function (data) {
-        let control = $("#comboOS");
-        let contenido = "";
-        contenido += "<option value='0' disabled selected >--Seleccione una obra social--</option>";
-        contenido += "<option value='" + data[0]['id'] + "'>";
-        contenido += data[0]['nombre'];
-        contenido += "</option>";
-        control.html(contenido);
-    });
     $.get("../ObrasSociales/getHabilitadas", function (data) {
         let control = $("#comboOS");
         let contenido = "";
+        contenido += "<option value='0' disabled selected >--Seleccione una obra social--</option>";
         for (let i = 0; i < data.length; i++) {
-            contenido += "<option value='" + data[i].id + "'>";
-            contenido += data[i].nombre;
+            contenido += "<option value='" + data[i].ID + "'>";
+            contenido += data[i].Nombre;
             contenido += "</option>";
         }
-        control.append(contenido);
+        control.html(contenido);
     });
 }
 
@@ -151,8 +143,8 @@ function modalEdit(id) {
     $("#staticBackdropLabel").text("Editar turno");
     limpiarCampos();
     habilitarCampos();
-    llenarComboOS();
     $.get("../Turnos/getOne/?id=" + id, function (data) {
+        console.log(data);
         llenarComboH(data[0]['idHorario']);
         $("#IDPersona").val(data[0]['idPersona']);
         $("#IDDiaHorario").val(data[0]['idDiaHorario']);
@@ -170,7 +162,6 @@ function modalDelete(id) {
     limpiarCampos();
     deshabilitarCampos();
     $("#btnAceptar").addClass("eliminar");
-    llenarComboOS();
     $.get("../Turnos/getOne/?id=" + id, function (data) {
         llenarComboH(data[0]['idHorario']);
         $("#IDPersona").val(data[0]['idPersona']);

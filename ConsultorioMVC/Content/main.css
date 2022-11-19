@@ -99,10 +99,6 @@ p {
     display: none;
 }
 
-.errorMessage-activo {
-    display: block;
-}
-
 /* ----- -----  Estilos para Validacion ----- ----- */
 .formContainer-correcto .formInput .validacionEstado {
     color: #1ed12d;

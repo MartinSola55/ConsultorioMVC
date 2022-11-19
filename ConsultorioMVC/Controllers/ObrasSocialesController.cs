@@ -1,4 +1,5 @@
 ﻿using ConsultorioMVC.Filter;
+using ConsultorioMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +25,18 @@ namespace ConsultorioMVC.Controllers
         public JsonResult getHabilitadas()
         {
             DataClasesDataContext bd = new DataClasesDataContext();
+            var particular = bd.ObrasSociales.Where(p => p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).FirstOrDefault();
             var lista = bd.ObrasSociales.Where(p=> p.habilitada && !p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p => p.nombre);
-            return Json(lista, JsonRequestBehavior.AllowGet);
+            
+            LinkedList<ObraSocial> habilitadas = new LinkedList<ObraSocial>();
+            ObraSocial os = new ObraSocial { ID = particular.id, Habilitada = particular.habilitada, Nombre = particular.nombre };
+            habilitadas.AddFirst(os);
+            foreach (var item in lista)
+            {
+                ObraSocial oS = new ObraSocial { ID = item.id, Habilitada = item.habilitada, Nombre = item.nombre };
+                habilitadas.AddLast(oS);
+            }
+            return Json(habilitadas, JsonRequestBehavior.AllowGet);
         }
         public JsonResult getOne(int id)
         {

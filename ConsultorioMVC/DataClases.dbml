@@ -14,7 +14,7 @@
     <Type Name="Usuario">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="password" Type="System.String" DbType="Char(60) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="Char(64) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.Horarios" Member="Horarios">

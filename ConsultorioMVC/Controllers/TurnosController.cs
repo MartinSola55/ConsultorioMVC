@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Transactions;
+using ConsultorioMVC.Models;
 
 namespace ConsultorioMVC.Controllers
 {
@@ -19,7 +20,7 @@ namespace ConsultorioMVC.Controllers
         public JsonResult getAll(string dia)
         {
             DataClasesDataContext bd = new DataClasesDataContext();
-            var turnos = from dh in bd.DiaHorarios
+            var query = from dh in bd.DiaHorarios
                          join h in bd.Horarios
                             on dh.horario_id equals h.id
                          join tur in bd.Turnos
@@ -46,9 +47,20 @@ namespace ConsultorioMVC.Controllers
                              apellido = (p ?? new Persona { id = 0, apellido = "" }).apellido,
                              obraSocial = (os ?? new ObrasSociales { id = 0, nombre = "" }).nombre,
                              telefono = (p ?? new Persona { id = 0, telefono = "" }).telefono,
-                             hora = h.hora.ToShortTimeString(),
+                             hora = h.hora,
                              disponible = dh.disponible
                          };
+            LinkedList<Models.Turno> turnos = new LinkedList<Models.Turno>();
+            foreach (var var in query)
+            {
+                Models.Turno turno = new Models.Turno
+                {
+                    ID = var.idTurno,
+                    Persona = new Models.Persona { ID = var.idPersona, Nombre = var.nombre, Apellido = var.apellido, Telefono = var.telefono, ObraSocial = new ObraSocial { ID = var.idOS, Nombre = var.obraSocial } },
+                    DiaHorario = new Models.DiaHorario { ID = var.idDiaHorario, Disponible = var.disponible, Horario = new Models.Horario { ID = var.idHorario, HoraString = var.hora.ToString("HH:mm") } }
+                };
+                turnos.AddLast(turno);
+            }
             return Json(turnos, JsonRequestBehavior.AllowGet);
         }
         public JsonResult getOne(int id)
