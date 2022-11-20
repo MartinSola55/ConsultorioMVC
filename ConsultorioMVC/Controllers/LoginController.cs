@@ -22,8 +22,8 @@ namespace ConsultorioMVC.Controllers
         }
         /*public ActionResult Insertar()
         {
-            string password = "Consultorio123";
-            string email = "fernandorsola@yahoo.com.ar";
+            string password = "";
+            string email = "";
             DataClasesDataContext bd = new DataClasesDataContext();
             SHA256Managed sha = new SHA256Managed();
             byte[] passNoCifrada = Encoding.Default.GetBytes(password);

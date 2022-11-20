@@ -48,7 +48,7 @@ p {
     position: relative;
 }
 
-.formTurno input:not([type="button"]), select {
+.formTurno input:not([type="submit"]), select {
     width: 100%;
     padding: .375rem .75rem;
     font-size: 1rem;

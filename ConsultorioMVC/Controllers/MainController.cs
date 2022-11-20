@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using ConsultorioMVC.Models;
 
 namespace ConsultorioMVC.Controllers
 {
@@ -19,6 +20,17 @@ namespace ConsultorioMVC.Controllers
             ViewBag.listadoObrasSociales = listadoObrasSociales();
             ViewBag.listadoHorarios = listadoHorarios();
             return View();
+        }
+        [HttpPost]
+        public ActionResult Inicio(Models.Turno turno)
+        {
+            ViewBag.listadoObrasSociales = listadoObrasSociales();
+            ViewBag.listadoHorarios = listadoHorarios();
+            if (ModelState.IsValid)
+            {
+                return View(turno);
+            }
+            return RedirectToAction(nameof(Inicio));
         }
         public ActionResult Contacto()
         {
@@ -132,7 +144,7 @@ namespace ConsultorioMVC.Controllers
 
                 lista = listado.Select(o => new SelectListItem { Text = o.nombre, Value = o.id.ToString() });
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -146,7 +158,7 @@ namespace ConsultorioMVC.Controllers
                 IEnumerable<Horario> horarios = bd.Horarios.ToList();
                 lista = horarios.Select(ho => new SelectListItem { Text = ho.hora.ToShortTimeString(), Value = ho.id.ToString() });
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }

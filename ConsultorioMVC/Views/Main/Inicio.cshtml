@@ -58,7 +58,7 @@
             using (Html.BeginForm("Save", "Main", FormMethod.Post, new { @id = "formTurno", @class = "formTurno container-fluid sombra", @style = "max-width: 600px" }))
             {
                 <fieldset class="mx-auto mb-3 p-3" style="max-width: 550px">
-                    <legend>Exclusivo para San Carlos Centro</legend>
+                    <legend class="fw-bold text-center">Exclusivo para <u>San Carlos Centro</u></legend>
                     <div>
                         <p>➢ Lunes, martes, miércoles y viernes de 09:00 a 13:00 hs.</p>
                         <p>➢ Para cancelar un turno, comunicarse telefónicamente al 03404-420923 / 3404-520532</p>
@@ -123,9 +123,9 @@
                         </div>
                     </div><!-- Contenedor de los campos  -->
                     <div>
-                        <input type="submit" id="btnEnviar" class="btn btn-success mt-4" value="Reservar turno" />
+                        <input type="submit" id="btnEnviar" class="btn btn-success mt-4 w-100 fw-bold" value="Reservar turno" />
                     </div>
-                    <div class="p-2 mt-4 errorMessage" id="errorMessage">
+                    <div class="px-2 py-4 mt-4 errorMessage" id="errorMessage">
                         <p class="my-auto text-center"><i class="bi bi-exclamation-triangle-fill"></i><b> Error: </b>Por favor, completa los datos requeridos</p>
                     </div>
                 </fieldset>

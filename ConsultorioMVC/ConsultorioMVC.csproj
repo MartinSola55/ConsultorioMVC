@@ -177,7 +177,7 @@
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\moment-with-locales.js" />
-    <Content Include="Scripts\navbar.js" />
+    <Content Include="Scripts\navbar-main.js" />
     <Content Include="Scripts\obra-social.js" />
     <Content Include="Scripts\pacientes.js" />
     <Content Include="Scripts\historias-clinicas.js" />

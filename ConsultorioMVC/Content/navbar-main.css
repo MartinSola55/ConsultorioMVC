@@ -1,4 +1,8 @@
-﻿.navbar-logo {
+﻿a:hover {
+  color: #000;
+}
+
+.navbar-logo {
     padding: 20px;
     color: #fff;
     margin-right: 3rem;
@@ -10,76 +14,44 @@
     background-image: linear-gradient(to bottom, transparent, #092f57);
 }
 
-#navbarSupportedContent {
-    position: relative;
-}
-
-#navbarSupportedContent ul {
-    padding: 0px;
-    margin: 0px;
-}
-
-#navbarSupportedContent ul li a i {
+#navbarContainer ul li a i {
     margin-right: 10px;
 }
 
-#navbarSupportedContent li {
-    list-style-type: none;
-    float: left;
-}
-
-#navbarSupportedContent ul li a {
-    color: rgba(255,255,255,0.75);
-    text-decoration: none;
-    font-size: 15px;
-    display: block;
-    padding: 20px 20px;
-    transition-duration: 0.6s;
-    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+#navbarContainer ul li a {
     position: relative;
+    color: #FFF;
+    text-decoration: none;
+    margin-right: 40px;
 }
 
-#navbarSupportedContent > ul > li.active > a {
-    color: #000;
-    background-color: transparent;
-    transition: all 0.7s;
+#navbarContainer > ul > li.active > a {
+    border-bottom: 3px solid #FFF;
+    color: #FFF;
+    padding-bottom: 7px;
 }
 
-#navbarSupportedContent a:not(:only-child):after {
-    content: "\f105";
+#navbarContainer ul li a:hover {
+    color: #FFF;
+}
+
+#navbarContainer ul li a::before {
+    content: "";
     position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 14px;
-    font-family: "Font Awesome 5 Free";
-    display: inline-block;
-    padding-right: 3px;
-    vertical-align: middle;
-    font-weight: 900;
-    transition: 0.5s;
+    display: block;
+    width: 100%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #FFF;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+
 }
 
-#navbarSupportedContent .active > a:not(:only-child):after {
-    transform: rotate(90deg);
+#navbarContainer ul li a:hover::before {
+    transform: scaleX(1);
 }
-
-.hori-selector {
-    display: inline-block;
-    position: absolute;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    transition-duration: 0.6s;
-    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    background-color: #fff;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    margin-top: 9px;
-    border: none;
-}
-
-
-
 
 @media(min-width: 992px) {
     ul #logout, #login {
@@ -106,65 +78,28 @@
     .navbar-expand-custom .navbar-collapse {
         display: -ms-flexbox !important;
         display: flex !important;
-        -ms-flex-preferred-size: auto;
         flex-basis: auto;
-    }
-
-    .hori-selector .right,
-    .hori-selector .left {
-        position: absolute;
-        width: 25px;
-        height: 25px;
-        background-color: #fff;
-        bottom: 0;
-    }
-
-    .hori-selector .right {
-        right: -25px;
-        bottom: 0px;
-    }
-
-    .hori-selector .left {
-        left: -25px;
-        bottom: 0px;
-    }
-
-    .hori-selector .right:before,
-    .hori-selector .left:before {
-        content: '';
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: #000;
-        background-image: linear-gradient(to bottom, #040d27, #083360);
-    }
-
-    .hori-selector .right:before {
-        bottom: 0;
-        right: -25px;
-    }
-
-    .hori-selector .left:before {
-        bottom: 0;
-        left: -25px;
     }
 }
 
 
 @media (max-width: 991px) {
+    #navbarContainer > ul > li.active > a {
+        max-width: fit-content;
+        margin: auto;
+    }
+
+    #navbarContainer ul li a:hover::before {
+        transform: scaleX(0.15);
+    }
+
     ul #logout, #login {
         text-align: center;
     }
 
-    #navbarSupportedContent ul li a {
-        padding: 12px 30px;
-    }
-
-    .hori-selector {
-        margin-top: 0px;
-        margin-left: 0px;
-        border-radius: 25px;
+    #navbarContainer ul li a {
+        padding: 12px 10px;
+        margin: 0 auto;
     }
 
     .navbar-toggler {
@@ -180,7 +115,17 @@
     }
 }
 
+@media (max-width: 600px) {
+    #navbarContainer ul li a:hover::before {
+        transform: scaleX(0.3);
+    }
+}
+
 @media (max-width: 449px) {
+    #navbarContainer ul li a:hover::before {
+        transform: scaleX(0.4);
+    }
+
     #navbtn {
         margin: 0 auto;
     }

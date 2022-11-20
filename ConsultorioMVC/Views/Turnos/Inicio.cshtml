@@ -1,17 +1,16 @@
 ﻿@{
     ViewBag.Title = "Turnos";
 }
+@model ConsultorioMVC.Models.Turno
 
 <link href="~/Content/mis-estilos.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui.structure.min.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui.theme.min.css" rel="stylesheet" />
+<link href="~/Content/daterangepicker.css" rel="stylesheet" />
 
 <h1 class="text-center">Turnos</h1>
 
 <div class="container">
     <label class="form-label">Ingrese el día: </label>
-    <input id="datepicker" class="form-control" />
+    <input type="text" id="datepicker" class="form-control" />
 </div>
 
 <div id="tabla-clase" class="mt-4">
@@ -22,52 +21,70 @@
     Agregar
 </button>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body contenedor-modal">
-                <label class="mb-2">ID: </label>
-                <input id="txtID" type="text" class="form-control limpiarCampo w-25 mb-2" disabled />
 
-                <input id="IDPersona" type="text" style="display:none" />
-                <input id="IDDiaHorario" type="text" style="display:none" />
+@{
+    using (Html.BeginForm("", "", FormMethod.Post, new { @id = "formTurno" }))
+    {
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body contenedor-modal">
+                        <label class="mb-3">ID: </label>
+                        @Html.TextBoxFor(model => model.ID, new { @id = "txtID", @readonly = "readonly", @class = "form-control limpiarCampo w-25 mb-3" })
 
-                <label class="mb-2 campo0">Nombre: </label>
-                <input id="txtNombre" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                        @Html.HiddenFor(model => model.Persona.ID, new { @id = "IDPersona", @style = "display:none" })
+                        @Html.HiddenFor(model => model.DiaHorario.ID, new { @id = "IDDiaHorario", @style = "display:none" })
 
-                <label class="mb-2 campo1">Apellido: </label>
-                <input id="txtApellido" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                        <label class="mb-2">Nombre: </label>
+                        @Html.TextBoxFor(model => model.Persona.Nombre, new { @id = "txtNombre", @type = "text", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Persona.Nombre, null, new { @class = "text-danger mb-3" })
 
-                <label class="mb-2 campo2">Obra social: </label>
-                <select id="comboOS" class="form-select limpiarCampo habilitarCampo deshabilitarCampo required mb-2">
-                </select>
+                        <label class="mb-2">Apellido: </label>
+                        @Html.TextBoxFor(model => model.Persona.Apellido, new { @id = "txtApellido", @type = "text", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Persona.Apellido, null, new { @class = "text-danger mb-3" })
 
-                <label class="mb-2 campo3">Teléfono: </label>
-                <input id="txtTelefono" type="tel" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                        <label class="mb-2">Obra social: </label>
+                        @Html.DropDownListFor(model => model.Persona.ObraSocial.ID, new SelectList(ViewBag.listadoObrasSociales, "Value", "Text"), "--Seleccione una obra social--", new { @id = "comboOS", @class = "form-select limpiarCampo habilitarCampo deshabilitarCampo" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Persona.ObraSocial.ID, null, new { @class = "text-danger mb-3" })
 
-                <label class="mb-2 campo5">Correo: </label>
-                <input id="txtCorreo" type="email" class="form-control limpiarCampo habilitarCampo deshabilitarCampo mb-2" />
+                        <label class="mb-2">Teléfono: </label>
+                        @Html.TextBoxFor(model => model.Persona.Telefono, new { @id = "txtTelefono", @type = "tel", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Persona.Telefono, null, new { @class = "text-danger mb-3" })
 
-                <label class="mb-2 campo4">Hora: </label>
-                <select id="comboHoras" class="form-select limpiarCampo habilitarCampo deshabilitarCampo required mb-2">
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
-                <button id="btnAceptar" onclick="confirmarCambios()" type="button" class="btn btn-success">Aceptar</button>
+                        <label class="mb-2">Correo: </label>
+                        @Html.TextBoxFor(model => model.Persona.Correo, new { @id = "txtCorreo", @type = "email", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Persona.Correo, null, new { @class = "text-danger mb-3" })
+
+                        <label class="mb-2">Hora: </label>
+                        @Html.DropDownListFor(model => model.DiaHorario.Horario.ID, new SelectList(ViewBag.listadoHorarios, "Value", "Text"), "--Seleccione una hora--", new { @id = "comboHoras", @class = "form-select limpiarCampo habilitarCampo deshabilitarCampo" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.DiaHorario.Horario.ID, null, new { @class = "text-danger mb-3" })
+
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                        <button id="btnAceptar" type="submit" class="btn btn-success">Aceptar</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
+    }
+}
 
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-<script src="~/Scripts/jquery-ui.min.js"></script>
-<script src="~/Scripts/datepicker-es.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script src="~/Scripts/moment-with-locales.js"></script>
+<script src="~/Scripts/daterangepicker.js"></script>
 <script src="~/Scripts/turnos.js"></script>

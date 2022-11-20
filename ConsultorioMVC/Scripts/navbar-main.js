@@ -4,11 +4,11 @@ jQuery(document).ready(function ($) {
 	var path = window.location.pathname.split("/").pop();
 
 	// Account for home page with empty path
-	if (path == '') {
-		path = 'Turnos';
+	if (path == 'Main' || path == '') {
+		path = 'Inicio';
 	}
 
-	var target = $('#navbarContainer ul li a[href="/' + path + '"]');
+	var target = $('#navbarContainer ul li a[href="/Main/' + path + '"]');
 	// Add active class to target link
 	target.parent().addClass('active');
 }); 

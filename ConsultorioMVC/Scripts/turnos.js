@@ -1,29 +1,37 @@
-﻿let header = ["Nombre", "Apellido", "Obra Social", "Teléfono", "Hora", "Disponible"];
-let horas = ["09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00"];
-let hoy = new Date();
+﻿const header = ["Nombre", "Apellido", "Obra Social", "Teléfono", "Hora", "Disponible"];
+const horas = ["09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00"];
+var hoy = new Date();
 let dd = String(hoy.getDate()).padStart(2, '0');
 let mm = String(hoy.getMonth() + 1).padStart(2, '0');
 let yyyy = hoy.getFullYear();
 hoy = dd + '/' + mm + '/' + yyyy;
+$("#datepicker").removeAttr("data-val-date");
 
 listarInicial(hoy);
 
 function listarInicial(dia) {
-    $("#datepicker").val(dia);
     $.get("../Turnos/getAll/?dia=" + dia, function (data) {
         listadoTurnos(header, data);
     });
     llenarComboOS();
 }
 
-$('#datepicker').datepicker();
-$('#datepicker').datepicker({
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true
+moment.locale('es');
+$(function () {
+    $("#datepicker").daterangepicker({
+        "autoApply": true,
+        "locale": {
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Hasta",
+            "toLabel": "Desde",
+        },
+        singleDatePicker: true,
+        opens: 'right',
+        autoUpdateInput: true,
+        autoApply: true
+    })
 });
-$("#datepicker").datepicker("option", "showAnim", "slideDown");
 
 jQuery('#datepicker').on('change', function () {
     let dia = $("#datepicker").val();
@@ -107,6 +115,7 @@ jQuery('#btnAgregar').on('click', function () {
     habilitarCampos();
     llenarComboH(0);
     $("#comboOS").val("0");
+    $("#txtID").prop("disabled", "disabled");
 });
 
 function llenarComboOS() {
@@ -144,10 +153,10 @@ function modalEdit(id) {
     limpiarCampos();
     habilitarCampos();
     $.get("../Turnos/getOne/?id=" + id, function (data) {
-        console.log(data);
         llenarComboH(data[0]['idHorario']);
         $("#IDPersona").val(data[0]['idPersona']);
         $("#IDDiaHorario").val(data[0]['idDiaHorario']);
+        $("#DiaHorario").val($("#datepicker").val());
         $("#txtID").val(data[0]['idTurno']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#txtApellido").val(data[0]['apellido']);
@@ -166,6 +175,7 @@ function modalDelete(id) {
         llenarComboH(data[0]['idHorario']);
         $("#IDPersona").val(data[0]['idPersona']);
         $("#IDDiaHorario").val(data[0]['idDiaHorario']);
+        $("#DiaHorario").val($("#datepicker").val());
         $("#txtID").val(data[0]['idTurno']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#txtApellido").val(data[0]['apellido']);
@@ -188,10 +198,6 @@ function turnoDelete(id) {
 
 function limpiarCampos() {
     $(".limpiarCampo").val("");
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        $(".campo" + i).removeClass("error");
-    }
     $("#comboHoras").prop("selectedIndex", 1);
     $("#btnAceptar").removeClass("eliminar");
 }
@@ -204,49 +210,47 @@ function deshabilitarCampos() {
     $(".deshabilitarCampo").attr("disabled", "disabled");
 }
 
-function campoRequired() {
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        if (campos[i].value == "") {
-            $(".campo" + i).addClass("error");
-          return false;
-        } else {
-            $(".campo" + i).removeClass("error");
-        }
+$('#formTurno').on('submit', function (e) {
+    e.preventDefault();
+    if ($("#txtNombre").hasClass("valid") &&
+        $("#txtApellido").hasClass("valid") &&
+        $("#comboOS").hasClass("valid") &&
+        $("#txtTelefono").hasClass("valid") &&
+        $("#txtCorreo").hasClass("valid") &&
+        $("#comboHoras").hasClass("valid"))
+    {
+        confirmarCambios();
     }
-    return true;
-}
+});
 
 function confirmarCambios() {
-    if (campoRequired()) {
-        let frm = new FormData();
-        let id = $("#txtID").val();
-        let idPersona = $("#IDPersona").val();
-        let idDiaHorario = $("#IDDiaHorario").val();
-        let nombre = $("#txtNombre").val();
-        let apellido = $("#txtApellido").val();
-        let obraSocial = $("#comboOS").val();
-        let telefono = $("#txtTelefono").val();
-        let correo = $("#txtCorreo").val();
-        let hora = $("#comboHoras").val();
-        let dia = $("#datepicker").val();
-        frm.append("id", id);
-        frm.append("Persona.id", idPersona);
-        frm.append("Persona.nombre", nombre);
-        frm.append("Persona.apellido", apellido);
-        frm.append("Persona.obra_social_id", obraSocial);
-        frm.append("Persona.telefono", telefono);
-        frm.append("Persona.correo", correo);
-        frm.append("DiaHorario.id", idDiaHorario);
-        frm.append("DiaHorario.horario_id", hora);
-        frm.append("DiaHorario.dia", dia);
-        if ($("#btnAceptar").hasClass("eliminar")) {
-            if (confirm("¿Seguro que desea eliminar el turno?") == 1) {
-                crudTurno(frm, "delete", dia);
-            }
-        } else {
-            crudTurno(frm, "save", dia);
+    let frm = new FormData();
+    let id = $("#txtID").val();
+    let idPersona = $("#IDPersona").val();
+    let idDiaHorario = $("#IDDiaHorario").val();
+    let nombre = $("#txtNombre").val();
+    let apellido = $("#txtApellido").val();
+    let obraSocial = $("#comboOS").val();
+    let telefono = $("#txtTelefono").val();
+    let correo = $("#txtCorreo").val();
+    let hora = $("#comboHoras").val();
+    let dia = $("#datepicker").val();
+    frm.append("id", id);
+    frm.append("Persona.ID", idPersona);
+    frm.append("Persona.Nombre", nombre);
+    frm.append("Persona.Apellido", apellido);
+    frm.append("Persona.ObraSocial.ID", obraSocial);
+    frm.append("Persona.Telefono", telefono);
+    frm.append("Persona.Correo", correo);
+    frm.append("DiaHorario.ID", idDiaHorario);
+    frm.append("DiaHorario.Horario.ID", hora);
+    frm.append("DiaHorario.Dia", dia);
+    if ($("#btnAceptar").hasClass("eliminar")) {
+        if (confirm("¿Seguro que desea eliminar el turno?") == 1) {
+            crudTurno(frm, "Delete", dia);
         }
+    } else {
+        crudTurno(frm, "Save", dia);
     }
 }
 
@@ -257,21 +261,23 @@ function crudTurno(frm, action, dia) {
         data: frm,
         contentType: false,
         processData: false,
-        dataType: 'json',
+        //dataType: 'json',
         success: function (data) {
+            console.log(data);
             if (data != 0) {
                 if ($("#btnAceptar").hasClass("eliminar")) {
                     alert("El turno se eliminó correctamente");
                 }
-                $("#btnCancelar").click();
 
             } else {
                 alert("Los cambios no se guardaron. Error en la base de datos");
             }
+            $("#btnCancelar").click();
             listarInicial(dia);
         }
     });
 }
+
 
 function deleteDH(frm, dia) {
     $.ajax({
