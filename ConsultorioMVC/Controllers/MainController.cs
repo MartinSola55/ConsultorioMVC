@@ -117,35 +117,46 @@ namespace ConsultorioMVC.Controllers
                             bd.SubmitChanges();
                             transaccion.Complete();
                         }
-                        ViewBag.Message = "Tu turno se guardó correctamente";
+                        ViewBag.Message = "Tu turno se otorgó correctamente";
 
                         //Enviar email
-                        if (turno.Persona.Correo != null)
+                        try
                         {
-                            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                            if (turno.Persona.Correo != null)
+                            {
+                                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
 
-                            string email = Environment.GetEnvironmentVariable("ENV_EMAIL");
-                            string password = Environment.GetEnvironmentVariable("ENV_PASSWORD");
+                                string email = Environment.GetEnvironmentVariable("ENV_EMAIL");
+                                string password = Environment.GetEnvironmentVariable("ENV_PASSWORD");
 
-                            smtp.Credentials = new NetworkCredential(email, password);
-                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                            smtp.EnableSsl = true;
+                                smtp.Credentials = new NetworkCredential(email, password);
+                                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                smtp.EnableSsl = true;
 
-                            MailMessage mail = new MailMessage();
-                            mail.From = new MailAddress("turnos@fernandosolatraumatologia.com.ar", "Dr. Fernando Sola");
-                            mail.To.Add(new MailAddress(turno.Persona.Correo));
-                            mail.Subject = "Tu turno ha sido confirmado";
-                            mail.IsBodyHtml = true;
+                                MailMessage mail = new MailMessage();
+                                mail.From = new MailAddress("turnos@fernandosolatraumatologia.com.ar", "Dr. Fernando Sola");
+                                mail.To.Add(new MailAddress(turno.Persona.Correo));
+                                mail.Subject = "Tu turno ha sido confirmado";
+                                mail.IsBodyHtml = true;
 
-                            string path = "~/Views/Main/Email.html";
-                            string body = System.IO.File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath(path));
-                            body = body.Replace("$NOMBRE", turno.Persona.Apellido + ", " + turno.Persona.Nombre);
-                            body = body.Replace("$DIA", turno.DiaHorario.Dia.ToShortDateString());
-                            body = body.Replace("$HORA", turno.DiaHorario.Horario.Hora.ToShortTimeString());
-                            body = body.Replace("$ANIO", DateTime.Now.Year.ToString());
-                            mail.Body = body;
+                                string path = "~/Views/Main/Email.html";
+                                string body = System.IO.File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath(path));
+                                body = body.Replace("$NOMBRE", turno.Persona.Apellido + ", " + turno.Persona.Nombre);
+                                body = body.Replace("$DIA", turno.DiaHorario.Dia.ToShortDateString());
+                                body = body.Replace("$HORA", diaH.Horario.hora.ToShortTimeString());
+                                body = body.Replace("$ANIO", DateTime.Now.Year.ToString());
+                                mail.Body = body;
 
-                            smtp.Send(mail);
+                                smtp.Send(mail);
+                                smtp.Dispose();
+                                smtp = null;
+
+                                ViewBag.EmailMessage = "Por favor, revise su bandeja de entrada o spam";
+                            }
+                        }
+                        catch (Exception)
+                        {
+                                ViewBag.EmailMessage = "No ha sido posible enviar el recordatorio por correo";
                         }
 
                     } else

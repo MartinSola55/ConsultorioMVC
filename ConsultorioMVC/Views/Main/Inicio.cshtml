@@ -15,8 +15,8 @@
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content d-flex flex-column" id="NotifContainer" style="background-color: khaki;">
-                        <button type="button" id="btnCerrar" class="btn-close mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <h3 id="txtNotification" class="fw-bold text-center mb-3"><i class="bi bi-exclamation-triangle"></i>&nbsp;@ViewBag.Message</h3>
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" class="fw-bold text-center mb-3"><i class="bi bi-exclamation-triangle"></i>&nbsp;@ViewBag.Message<br /></h3>
                     </div>
                 </div>
             </div>
@@ -28,8 +28,8 @@
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content d-flex flex-column" id="NotifContainer" style="background-color: crimson;">
-                        <button type="button" id="btnCerrar" class="btn-close mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <h3 id="txtNotification" class="fw-bold text-center text-white mb-3"><i class="bi bi-exclamation-diamond"></i>&nbsp;@ViewBag.Message</h3>
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" class="fw-bold text-center text-white mb-3"><i class="bi bi-exclamation-diamond"></i>&nbsp;@ViewBag.Message<br /></h3>
                     </div>
                 </div>
             </div>
@@ -41,8 +41,8 @@
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content d-flex flex-column px-5" id="NotifContainer" style="background-color: yellowgreen;">
-                        <button type="button" id="btnCerrar" class="btn-close mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <h3 id="txtNotification" style="color: black;" class="text-center fw-bold mb-3"><i class="bi bi-info-circle"></i>&nbsp;@ViewBag.Message</h3>
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" style="color: black;" class="text-center fw-bold mb-3"><i class="bi bi-info-circle"></i>&nbsp;@ViewBag.Message<br /><br />@ViewBag.EmailMessage</h3>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                         <div id="containerTelefono" class="formContainer">
                             <label for="txtTelefono" class="asterisco mb-0">Teléfono</label>
                             <div class="formInput">
-                                @Html.TextBoxFor(model => model.Persona.Telefono, new { @id = "txtTelefono", @class = "required", @placeholder = "Sin 0 ni 15" })
+                                @Html.TextBoxFor(model => model.Persona.Telefono, new { @id = "txtTelefono", @type = "tel", @class = "required", @placeholder = "Sin 0 ni 15" })
                                 <i class="validacionEstado bi bi-x-circle-fill"></i>
                             </div>
                             @Html.ValidationMessageFor(model => model.Persona.Telefono, null, new { @class = "text-danger mb-4 mt-3" })
@@ -116,7 +116,7 @@
                         <div id="containerEmail" class="formContainer">
                             <label class="form-label mb-0" for="txtEmail">Correo</label>
                             <div class="formInput">
-                                @Html.TextBoxFor(model => model.Persona.Correo, new { @id = "txtEmail", @type = "email", @placeholder = "" })
+                                @Html.TextBoxFor(model => model.Persona.Correo, new { @id = "txtEmail", @type = "email", @placeholder = "Recibirás un recordatorio por correo" })
                                 <i class="validacionEstado bi bi-x-circle-fill"></i>
                             </div>
                             @Html.ValidationMessageFor(model => model.Persona.Correo, null, new { @class = "text-danger mb-4 mt-3" })
