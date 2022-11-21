@@ -2,11 +2,11 @@
 
 if ($("#txtNotification").html() !== "") {
     $("#NotifContainer").show();
+    setTimeout(function () {
+        $('#NotifContainer').fadeOut(1500)
+    }, 4000)
 }
 
-setTimeout(function () {
-    $('#NotifContainer').fadeOut(1500)
-}, 4000)
 
 $("#txtUser").on("input", function () {
     setTimeout(function () {

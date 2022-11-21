@@ -98,7 +98,7 @@ namespace ConsultorioMVC.Controllers
 
                 var repetido = bd.Turnos.Where(t => t.DiaHorario.dia.Equals(turno.DiaHorario.Dia) && t.DiaHorario.horario_id.Equals(turno.DiaHorario.Horario.ID)).FirstOrDefault();
                 
-                if(repetido == null)
+                if (repetido == null)
                 {
                     using (var transaccion = new TransactionScope())
                     {
@@ -118,9 +118,9 @@ namespace ConsultorioMVC.Controllers
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ViewBag.Message = ex.Message;
+                ViewBag.Message = "Hubo un error con la base de datos. No se ha podido otorgar tu turno";
                 ViewBag.Error = 2;
             }
             ViewBag.listadoObrasSociales = listadoObrasSociales();

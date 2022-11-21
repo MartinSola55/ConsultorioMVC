@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
 }
-@model Usuario
+@model ConsultorioMVC.Models.Usuario
 
 <!DOCTYPE html>
 
@@ -31,17 +31,17 @@
                                     <div id="containerUser" class="form-outline form-white mb-5 text-start">
                                         <label class="form-label">Email</label>
                                         <div class="formInput">
-                                            @Html.TextBoxFor(model => model.email, new { @id = "txtUser", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                                            @Html.TextBoxFor(model => model.Email, new { @id = "txtUser", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
                                         </div>
-                                        @Html.ValidationMessageFor(model => model.email, null, new { @class = "text-danger mb-4 mt-3", @id = "lblUser" })
+                                        @Html.ValidationMessageFor(model => model.Email, null, new { @class = "text-danger mb-4 mt-3", @id = "lblUser" })
                                     </div>
 
                                     <div id="containerPass" class="form-outline form-white mb-5 text-start">
                                         <label class="form-label" for="typePasswordX">Contraseña</label>
                                         <div class="formInput">
-                                            @Html.TextBoxFor(model => model.password, new { @id = "txtPass", @type = "password", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                                            @Html.TextBoxFor(model => model.Password, new { @id = "txtPass", @type = "password", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
                                         </div>
-                                        @Html.ValidationMessageFor(model => model.password, null, new { @class = "text-danger mb-4 mt-3", @id = "lblPass" })
+                                        @Html.ValidationMessageFor(model => model.Password, null, new { @class = "text-danger mb-4 mt-3", @id = "lblPass" })
                                     </div>
 
                                     <input id="btnIngresar" type="submit" class="btn btn-outline-light btn-lg px-5 mt-2" value="Ingresar" />
@@ -74,7 +74,7 @@
         </div>
     </section>
 
-    <script src="~/Scripts/jquery-3.6.1.min.js"></script>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/login.js"></script>

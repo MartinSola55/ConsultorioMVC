@@ -99,7 +99,7 @@
                         <div id="containerFecha" class="formContainer">
                             <label for="datepicker" class="asterisco mb-0">Día</label>
                             <div class="formInput">
-                                @Html.TextBoxFor(model => model.DiaHorario.Dia, "{0:dd/MM/yyyy}", new { @id = "datepicker", @class = "required", @placeholder = "dd/mm/aaaa", @min = @Html.Raw(diaMin), @max = @DateTime.Today.AddDays(11).ToShortDateString() })
+                                @Html.TextBoxFor(model => model.DiaHorario.Dia, "{0:dd/MM/yyyy}", new { @id = "datepicker", @class = "required", @readonly = "readonly", @placeholder = "dd/mm/aaaa", @min = @Html.Raw(diaMin), @max = @DateTime.Today.AddDays(11).ToShortDateString() })
                                 <i class="validacionEstado bi bi-x-circle-fill"></i>
                                 <input style="display: none" type="text" id="confimaFecha" />
                             </div>
@@ -116,7 +116,7 @@
                         <div id="containerEmail" class="formContainer">
                             <label class="form-label mb-0" for="txtEmail">Correo</label>
                             <div class="formInput">
-                                @Html.TextBoxFor(model => model.Persona.Correo, new { @id = "txtEmail", @type = "email", @placeholder = "Recibirás un recordatorio" })
+                                @Html.TextBoxFor(model => model.Persona.Correo, new { @id = "txtEmail", @type = "email", @placeholder = "" })
                                 <i class="validacionEstado bi bi-x-circle-fill"></i>
                             </div>
                             @Html.ValidationMessageFor(model => model.Persona.Correo, null, new { @class = "text-danger mb-4 mt-3" })

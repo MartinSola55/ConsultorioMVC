@@ -210,6 +210,7 @@ namespace ConsultorioMVC.Controllers
             ViewBag.listadoHorarios = listadoHorarios();
             return View("Inicio");
         }
+        [HttpPost]
         public ActionResult Delete(Models.Turno turno)
         {
             try
