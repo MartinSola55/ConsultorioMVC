@@ -237,6 +237,7 @@
     <Content Include="Views\Shared\_MainLayout.cshtml" />
     <Content Include="Views\Main\Inicio.cshtml" />
     <Content Include="Views\Main\Contacto.cshtml" />
+    <Content Include="Views\Main\Email.html" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

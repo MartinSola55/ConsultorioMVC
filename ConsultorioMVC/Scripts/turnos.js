@@ -212,12 +212,12 @@ function deshabilitarCampos() {
 
 $('#formTurno').on('submit', function (e) {
     e.preventDefault();
-    if ($("#txtNombre").hasClass("valid") &&
+    if (($("#txtNombre").hasClass("valid") &&
         $("#txtApellido").hasClass("valid") &&
         $("#comboOS").hasClass("valid") &&
         $("#txtTelefono").hasClass("valid") &&
         $("#txtCorreo").hasClass("valid") &&
-        $("#comboHoras").hasClass("valid"))
+        $("#comboHoras").hasClass("valid")) || $("#txtID").val() != "")
     {
         confirmarCambios();
     }
@@ -262,16 +262,7 @@ function crudTurno(frm, action, dia) {
         contentType: false,
         processData: false,
         //dataType: 'json',
-        success: function (data) {
-            console.log(data);
-            if (data != 0) {
-                if ($("#btnAceptar").hasClass("eliminar")) {
-                    alert("El turno se eliminó correctamente");
-                }
-
-            } else {
-                alert("Los cambios no se guardaron. Error en la base de datos");
-            }
+        success: function () {
             $("#btnCancelar").click();
             listarInicial(dia);
         }

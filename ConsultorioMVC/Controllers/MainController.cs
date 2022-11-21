@@ -7,6 +7,11 @@ using System.Web.Mvc;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using ConsultorioMVC.Models;
+using System.Net.Mail;
+using System.Net;
+using System.IO;
+using System.Runtime.InteropServices.ComTypes;
+
 
 namespace ConsultorioMVC.Controllers
 {
@@ -74,58 +79,94 @@ namespace ConsultorioMVC.Controllers
         }
         public ActionResult Save(Models.Turno turno)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                Persona persona = new Persona
+                try
                 {
-                    nombre = toUpperFirst(turno.Persona.Nombre),
-                    apellido = toUpperFirst(turno.Persona.Apellido),
-                    telefono = toNumber(turno.Persona.Telefono),
-                    obra_social_id = turno.Persona.ObraSocial.ID,
-                    correo = turno.Persona.Correo
-                };
-
-                var diaH = (from dh in bd.DiaHorarios
-                            where dh.dia == turno.DiaHorario.Dia
-                            && dh.horario_id == turno.DiaHorario.Horario.ID
-                            select dh).FirstOrDefault();
-                diaH.disponible = false;
-
-                var turnoNew = new Turno
-                {
-                    dia_horario_id = diaH.id
-                };
-
-                var repetido = bd.Turnos.Where(t => t.DiaHorario.dia.Equals(turno.DiaHorario.Dia) && t.DiaHorario.horario_id.Equals(turno.DiaHorario.Horario.ID)).FirstOrDefault();
-                
-                if (repetido == null)
-                {
-                    using (var transaccion = new TransactionScope())
+                    Persona persona = new Persona
                     {
-                        bd.Personas.InsertOnSubmit(persona);
-                        bd.SubmitChanges();
+                        nombre = toUpperFirst(turno.Persona.Nombre),
+                        apellido = toUpperFirst(turno.Persona.Apellido),
+                        telefono = toNumber(turno.Persona.Telefono),
+                        obra_social_id = turno.Persona.ObraSocial.ID,
+                        correo = turno.Persona.Correo
+                    };
 
-                        turnoNew.persona_id = persona.id;
-                        bd.Turnos.InsertOnSubmit(turnoNew);
-                        bd.SubmitChanges();
-                        transaccion.Complete();
+                    var diaH = (from dh in bd.DiaHorarios
+                                where dh.dia == turno.DiaHorario.Dia
+                                && dh.horario_id == turno.DiaHorario.Horario.ID
+                                select dh).FirstOrDefault();
+                    diaH.disponible = false;
+
+                    var turnoNew = new Turno
+                    {
+                        dia_horario_id = diaH.id
+                    };
+
+                    var repetido = bd.Turnos.Where(t => t.DiaHorario.dia.Equals(turno.DiaHorario.Dia) && t.DiaHorario.horario_id.Equals(turno.DiaHorario.Horario.ID)).FirstOrDefault();
+                
+                    if (repetido == null)
+                    {
+                        using (var transaccion = new TransactionScope())
+                        {
+                            bd.Personas.InsertOnSubmit(persona);
+                            bd.SubmitChanges();
+
+                            turnoNew.persona_id = persona.id;
+                            bd.Turnos.InsertOnSubmit(turnoNew);
+                            bd.SubmitChanges();
+                            transaccion.Complete();
+                        }
+                        ViewBag.Message = "Tu turno se guardó correctamente";
+
+                        //Enviar email
+                        if (turno.Persona.Correo != null)
+                        {
+                            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+
+                            string email = Environment.GetEnvironmentVariable("ENV_EMAIL");
+                            string password = Environment.GetEnvironmentVariable("ENV_PASSWORD");
+
+                            smtp.Credentials = new NetworkCredential(email, password);
+                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            smtp.EnableSsl = true;
+
+                            MailMessage mail = new MailMessage();
+                            mail.From = new MailAddress("turnos@fernandosolatraumatologia.com.ar", "Dr. Fernando Sola");
+                            mail.To.Add(new MailAddress(turno.Persona.Correo));
+                            mail.Subject = "Tu turno ha sido confirmado";
+                            mail.IsBodyHtml = true;
+
+                            string path = "~/Views/Main/Email.html";
+                            string body = System.IO.File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath(path));
+                            body = body.Replace("$NOMBRE", turno.Persona.Apellido + ", " + turno.Persona.Nombre);
+                            body = body.Replace("$DIA", turno.DiaHorario.Dia.ToShortDateString());
+                            body = body.Replace("$HORA", turno.DiaHorario.Horario.Hora.ToShortTimeString());
+                            body = body.Replace("$ANIO", DateTime.Now.Year.ToString());
+                            mail.Body = body;
+
+                            smtp.Send(mail);
+                        }
+
+                    } else
+                    {
+                        ViewBag.Message = "El turno ya ha sido otorgado";
+                        ViewBag.Error = 1;
                     }
-                    ViewBag.Message = "Tu turno se guardó correctamente";
-                } else
-                {
-                    ViewBag.Message = "El turno ya ha sido otorgado";
-                    ViewBag.Error = 1;
-                }
 
-            }
-            catch (Exception)
-            {
-                ViewBag.Message = "Hubo un error con la base de datos. No se ha podido otorgar tu turno";
-                ViewBag.Error = 2;
+                }
+                catch (Exception)
+                {
+                    ViewBag.Message = "Hubo un error con la base de datos. No se ha podido otorgar tu turno";
+                    ViewBag.Error = 2;
+                }
+                ViewBag.listadoObrasSociales = listadoObrasSociales();
+                ViewBag.listadoHorarios = listadoHorarios();
+                return View("Inicio");
             }
             ViewBag.listadoObrasSociales = listadoObrasSociales();
             ViewBag.listadoHorarios = listadoHorarios();
-            return View("Inicio");
+            return RedirectToAction(nameof(Inicio));
         }
         public IEnumerable<SelectListItem> listadoObrasSociales()
         {

@@ -123,7 +123,7 @@ namespace ConsultorioMVC.Controllers
             return Json(horas, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult Save(Models.Turno turno)
+        public void Save(Models.Turno turno)
         {
             try
             {
@@ -208,7 +208,6 @@ namespace ConsultorioMVC.Controllers
             }
             ViewBag.listadoObrasSociales = listadoObrasSociales();
             ViewBag.listadoHorarios = listadoHorarios();
-            return View("Inicio");
         }
         [HttpPost]
         public ActionResult Delete(Models.Turno turno)

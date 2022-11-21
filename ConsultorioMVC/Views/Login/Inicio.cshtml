@@ -24,14 +24,14 @@
                             @{
                                 using (Html.BeginForm("Validar", "Login", FormMethod.Post, new { @id = "formLogin", @class = "formLogin mt-md-4 pb-3" }))
                                 {
-                                    <h1 class="fw-bold mb-3 text-uppercase">Iniciar sesión</h1>
+                                    <h1 class="fw-bold my-3 text-uppercase">Iniciar sesión</h1>
 
                                     <h4 class="text-white-50 mb-3">Por favor, ingrese su usuario y contraseña</h4>
 
                                     <div id="containerUser" class="form-outline form-white mb-5 text-start">
                                         <label class="form-label">Email</label>
                                         <div class="formInput">
-                                            @Html.TextBoxFor(model => model.Email, new { @id = "txtUser", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                                            @Html.TextBoxFor(model => model.Email, new { @id = "txtUser", @type = "email", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
                                         </div>
                                         @Html.ValidationMessageFor(model => model.Email, null, new { @class = "text-danger mb-4 mt-3", @id = "lblUser" })
                                     </div>
