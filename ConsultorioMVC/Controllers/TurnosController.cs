@@ -135,8 +135,12 @@ namespace ConsultorioMVC.Controllers
                                 apellido = toUpperFirst(turno.Persona.Apellido),
                                 telefono = toNumber(turno.Persona.Telefono),
                                 obra_social_id = turno.Persona.ObraSocial.ID,
-                                correo = turno.Persona.Correo.ToLower()
                             };
+
+                            if (turno.Persona.Correo != null)
+                            {
+                                persona.correo = turno.Persona.Correo.ToLower();
+                            }
 
                             var turnoNew = new Turno
                             {
