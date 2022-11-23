@@ -1,6 +1,15 @@
 ﻿listar();
 let header = ["Nombre", "Habilitada"];
 
+$(document).ready(function () {
+    if ($("#txtNotification").html() !== "") {
+        $("#btnModal").click();
+        setTimeout(function () {
+            $("#btnCerrar").click();
+        }, 4000)
+    }
+});
+
 function listar() {
     $.get("../ObrasSociales/getAll", function (data) {
         listadoOS(header, data);
@@ -93,6 +102,7 @@ jQuery('#btnAgregar').on('click', function () {
     habilitarCampos();
     $("#staticBackdropLabel").text("Agregar obra social");
     $("#checkHabilitada").prop('checked', false);
+    $("#txtID").prop("disabled", "disabled");
 });
 
 function modalEdit(id) {
@@ -100,9 +110,11 @@ function modalEdit(id) {
     limpiarCampos();
     habilitarCampos();
     $.get("../ObrasSociales/getOne/?id=" + id, function (data) {
+        console.log(data);
         $("#txtID").val(data[0]['id']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#checkHabilitada").prop('checked', data[0]['habilitada']);
+        $("#checkHabilitada").attr('value', data[0]['habilitada']);
     });
 }
 
@@ -123,10 +135,6 @@ function modalDelete(id) {
 
 function limpiarCampos() {
     $(".limpiarCampo").val("");
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        $(".campo" + i).removeClass("error");
-    }
     $("#btnAceptar").removeClass("eliminar");
 }
 
@@ -139,59 +147,28 @@ function deshabilitarCampos() {
 }
 
 function confirmarCambios() {
-    if (campoRequired()) {
-        let frm = new FormData();
-        let id = $("#txtID").val();
-        let nombre = $("#txtNombre").val();
-        let check = $("#checkHabilitada").is(':checked');
-        frm.append("id", id);
-        frm.append("nombre", nombre);
-        frm.append("habilitada", check);
-        if ($("#btnAceptar").hasClass("eliminar")) {
-            if (confirm("¿Seguro que desea eliminar la obra social?") == 1) {
-                crudOS(frm, "delete");
-            }
-        } else {
-            crudOS(frm, "save");
+    if ($("#btnAceptar").hasClass("eliminar")) {
+        if (confirm("¿Seguro que desea eliminar la obra social?") == 1) {
+            $("#formOS").attr("action", "/ObrasSociales/Delete");
+            $("#formOS").submit();
         }
+    } else {
+        $("#formOS").attr("action", "/ObrasSociales/Save");
+        $("#formOS").submit();
     }
 }
 
-function campoRequired() {
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        if (campos[i].value == "") {
-            $(".campo" + i).addClass("error");
-            return false;
-        } else {
-            $(".campo" + i).removeClass("error");
-        }
+$("#checkHabilitada").on('change', function () {
+    if ($(this).is(':checked')) {
+        $(this).attr('value', 'true');
+    } else {
+        $(this).attr('value', 'false');
     }
-    return true;
-}
+});
 
-function crudOS(frm, action) {
-    $.ajax({
-        type: "POST",
-        url: "../ObrasSociales/" + action,
-        data: frm,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            if (data == 1) {
-                listar();
-                if ($("#btnAceptar").hasClass("eliminar")) {
-                    alert("La obra social se eliminó correctamente");
-                } else {
-                    alert("La obra social se guardó correctamente");
-                }
-                $("#btnCancelar").click();
-
-            } else if ( data == -1) {
-                alert("La obra social ingresada ya existe");
-            } else {
-                alert("Los cambios no se guardaron. Error en la base de datos");
-            }
-        }
-    });
-}
+$('#btnAceptar').on('click', function (e) {
+    e.preventDefault();
+    if ($("#txtNombre").hasClass("valid") || $("#txtID").val() != "") {
+        confirmarCambios();
+    }
+});

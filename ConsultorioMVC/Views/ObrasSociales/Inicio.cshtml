@@ -1,13 +1,56 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Obras Sociales";
 }
+@model ObrasSociales
 
 <link href="~/Content/mis-estilos.css" rel="stylesheet" />
 <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
 
-<h1 class="text-center">Obras Sociales</h1>
+@{ if (ViewBag.Message != null)
+    {
+        if (ViewBag.Error == 1)
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="modalNotif" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column" id="NotifContainer" style="background-color: khaki;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" class="fw-bold text-center mb-3"><i class="bi bi-exclamation-triangle"></i>&nbsp;@ViewBag.Message<br /></h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#modalNotif'></button>
+        }
+        else if (ViewBag.Error == 2)
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="modalNotif" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column" id="NotifContainer" style="background-color: crimson;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" class="fw-bold text-center text-white mb-3"><i class="bi bi-exclamation-diamond"></i>&nbsp;@ViewBag.Message<br /></h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#modalNotif'></button>
+        }
+        else
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="modalNotif" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column px-5" id="NotifContainer" style="background-color: yellowgreen;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" style="color: black;" class="text-center fw-bold mb-3"><i class="bi bi-info-circle"></i>&nbsp;@ViewBag.Message<br /></h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#modalNotif'></button>
+        }
+    }
+}
 
+<h1 class="text-center">Obras Sociales</h1>
 
 <div class="container">
     <div class="container-fluid d-flex">
@@ -37,35 +80,46 @@
         Agregar
     </button>
 </div>
+@{
+    using (Html.BeginForm("", "", FormMethod.Post, new { @id = "formOS", @class = "container-fluid sombra", @style = "max-width: 600px" }))
+    {
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body contenedor-modal">
+                        <label class="form-label mb-2">ID: </label>
+                        @Html.TextBoxFor(model => model.id, new { @id = "txtID", @readonly = "readonly", @class = "form-control limpiarCampo w-25 mb-3" })
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body contenedor-modal">
-                <label class="form-label mb-2">ID: </label>
-                <input id="txtID" type="text" class="form-control limpiarCampo w-25 mb-2" disabled />
-                <label class="form-label mb-2 campo0">Nombre: </label>
-                <input id="txtNombre" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
-                <label class="form-label">Habilitada: </label>
-                <div>
-                    <input id="checkHabilitada" class="form-check habilitarCampo deshabilitarCampo" type="checkbox" style="transform:scale(1.25)" />
+                        <label class="form-label mb-2">Nombre: </label>
+                        @Html.TextBoxFor(model => model.nombre, new { @id = "txtNombre", @type = "text", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.nombre, null, new { @class = "text-danger mb-3" })
+
+                        <label class="form-label">Habilitada: </label>
+                        <div>
+                            @Html.CheckBoxFor(model => model.habilitada, new { @id = "checkHabilitada", @class = "form-check limpiarCampo habilitarCampo deshabilitarCampo", @style = "transform:scale(1.25)" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                        <button id="btnAceptar" type="submit" class="btn btn-success">Aceptar</button>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
-                <button id="btnAceptar" onclick="confirmarCambios()" type="button" class="btn btn-success">Aceptar</button>
-            </div>
         </div>
-    </div>
-</div>
+    }
+}
 
 
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/modernizr-2.8.3.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 <script src="~/Scripts/obra-social.js"></script>

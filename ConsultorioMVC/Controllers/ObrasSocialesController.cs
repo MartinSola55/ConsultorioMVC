@@ -11,6 +11,7 @@ namespace ConsultorioMVC.Controllers
     [Seguridad]
     public class ObrasSocialesController : Controller
     {
+        DataClasesDataContext bd = new DataClasesDataContext();
         // GET: ObrasSociales
         public ActionResult Inicio()
         {
@@ -18,13 +19,11 @@ namespace ConsultorioMVC.Controllers
         }
         public JsonResult getAll()
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var lista = bd.ObrasSociales.Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p => p.nombre);
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
         public JsonResult getHabilitadas()
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var particular = bd.ObrasSociales.Where(p => p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).FirstOrDefault();
             var lista = bd.ObrasSociales.Where(p=> p.habilitada && !p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p => p.nombre);
             
@@ -40,71 +39,71 @@ namespace ConsultorioMVC.Controllers
         }
         public JsonResult getOne(int id)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var lista = bd.ObrasSociales.Where(p => p.id.Equals(id)).Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
         public JsonResult getParticular()
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var particular = bd.ObrasSociales.Where(p => p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(particular, JsonRequestBehavior.AllowGet);
         }
         public JsonResult getResto()
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var resto = bd.ObrasSociales.Where(p => !p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p=> p.nombre);
             return Json(resto, JsonRequestBehavior.AllowGet);
         }
-        public int save(ObrasSociales os)
+        [HttpPost]
+        public ActionResult Save(ObrasSociales os)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            int regAfectados = 0;
-            try
+            if (ModelState.IsValid)
             {
-                int repetido = bd.ObrasSociales
-                    .Where(p => p.nombre.Equals(os.nombre)).Count();
-                if (repetido == 0)
+                try
                 {
-                    if (os.id == 0)
+                    var repetido = bd.ObrasSociales
+                        .Where(p => p.nombre.Equals(os.nombre) && !p.id.Equals(os.id)).FirstOrDefault();
+                    if (repetido == null)
                     {
-                        bd.ObrasSociales.InsertOnSubmit(os);
-                        bd.SubmitChanges();
-                        regAfectados = 1;
-                    } else
-                    {
-                        ObrasSociales osOld =  bd.ObrasSociales.Where(p => p.id.Equals(os.id)).First();
-                        osOld.nombre = os.nombre;
-                        osOld.habilitada = os.habilitada;
-                        bd.SubmitChanges();
-                        regAfectados = 1;
+                        if (os.id == 0)
+                        {
+                            bd.ObrasSociales.InsertOnSubmit(os);
+                            bd.SubmitChanges();
+                        } else
+                        {
+                            ObrasSociales osOld =  bd.ObrasSociales.Where(p => p.id.Equals(os.id)).First();
+                            osOld.nombre = os.nombre;
+                            osOld.habilitada = os.habilitada;
+                            bd.SubmitChanges();
+                        }
+                        ViewBag.Message = "La obra social se guardó correctamente";
                     }
-                } else
+                    else
+                    {
+                        ViewBag.Message = "La obra social ingresada ya existe";
+                        ViewBag.Error = 1;
+                    }
+                } catch (Exception)
                 {
-                    regAfectados = -1;
+                    ViewBag.Message = "Hubo un error con la base de datos. No se ha podido guardar la obra social";
+                    ViewBag.Error = 2;
                 }
-            } catch (Exception)
-            {
-                regAfectados = 0;
             }
-            return regAfectados;
+            return View("Inicio");
         }
-        public int delete(ObrasSociales os)
+        public ActionResult Delete(ObrasSociales os)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            int regAfectados = 0;
             try
             {
                 ObrasSociales osOld = bd.ObrasSociales.Where(p => p.id.Equals(os.id)).First();
                 bd.ObrasSociales.DeleteOnSubmit(osOld);
                 bd.SubmitChanges();
-                regAfectados = 1;
+                ViewBag.Message = "La obra social se eliminó correctamente";
             }
             catch (Exception)
             {
-                regAfectados = 0;
+                ViewBag.Message = "Hubo un error con la base de datos. No se ha podido eliminar la obra social";
+                ViewBag.Error = 2;
             }
-            return regAfectados;
+            return View("Inicio");
         }
         public JsonResult filtrarObrasSocialesHabilitadas(string nombre, int habilitada)
         {
@@ -115,7 +114,6 @@ namespace ConsultorioMVC.Controllers
         }
         public JsonResult buscarObraSocialNombre(string nombre)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var os = bd.ObrasSociales.Where(p => p.nombre.Contains(nombre)).Select(p => new { p.id, p.nombre, p.habilitada });
             return Json(os, JsonRequestBehavior.AllowGet);
         }
