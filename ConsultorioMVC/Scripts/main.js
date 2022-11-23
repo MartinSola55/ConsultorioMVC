@@ -5,13 +5,14 @@ moment.locale('es');
 $("#datepicker").removeAttr("data-val-date");
 limpiarCampos();
 
-if ($("#txtNotification").html() !== "") {
-    $("#btnModal").click();
-}
-
-setTimeout(function () {
-    $("#btnCerrar").click();
-}, 6000)
+$(document).ready(function () {
+    if ($("#txtNotification").html() !== "") {
+        $("#btnModal").click();
+        setTimeout(function () {
+            $("#btnCerrar").click();
+        }, 8000)
+    }
+});
 
 $(function () {
     $('#datepicker').daterangepicker({

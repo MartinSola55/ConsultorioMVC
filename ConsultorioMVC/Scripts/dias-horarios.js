@@ -1,7 +1,16 @@
-﻿let header = ["Horario", "Atiende"];
-let horas = ["09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00"];
+﻿let horas = ["09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00"];
 let hoy = new Date();
 var daylist;
+
+$(document).ready(function () {
+    if ($("#txtNotification").html() !== "") {
+        $("#btnModal").click();
+        setTimeout(function () {
+            $("#btnCerrar").click();
+        }, 6000)
+    }
+});
+
 
 var getDaysArray = function (start, end) {
     for (var arr = [], dt = new Date(start); dt <= new Date(end); dt.setDate(dt.getDate() + 1)) {
@@ -44,36 +53,7 @@ $(function () {
     })
 });
 
-listadoDH(header);
 limpiarCampos();
-
-function listadoDH(arrayHeader) {
-    let contenido = "";
-    contenido += "<table class='container table table-oscura table-striped table-bordered table-hover'>";
-    contenido += "<thead>";
-    contenido += "<tr class='fw-bold'>";
-    for (let i = 0; i < arrayHeader.length; i++) {
-        contenido += "<td class='text-center'>";
-        contenido += arrayHeader[i];
-        contenido += "</td>";
-    }
-    contenido += "</tr>";
-    contenido += "</thead>";
-    contenido += "<tbody>";
-    for (let i = 0; i < 13; i++) {
-        contenido += "<tr class='text-center'>";
-        contenido += "<td>" + horas[i] + "</td>";
-        contenido += "<td>"
-        contenido += "<div class='d-flex justify-content-center'>"
-        contenido += "<input value='" + (i+1) + "' type='checkbox' name='horas[]' class='form-check' style='transform:scale(1.5)' />";
-        contenido += "</div>";
-        contenido += "</td>";
-        contenido += "</tr>";
-    }
-    contenido += "</tbody>";
-    contenido += "</table>";
-    $("#tabla-dh").html(contenido);
-}
 
 function selectAll(source) {
     checkboxes = $('input[name="horas[]"]');
@@ -112,32 +92,16 @@ function campoRequired() {
     return true;
 }
 
-function confirmarCambios() {
+$('#btnAceptar').on('click', function (e) {
+    e.preventDefault();
     if (campoRequired()) {
         let dias = daylist;
         let selectedHoras = $.map($('input[name="horas[]"]:checked'), function (c) { return c.value; })
-        insertarDH(dias, selectedHoras);
+        $("#arrayHorarios").val(selectedHoras);
+        $("#arrayDias").val(dias);
+        console.log(dias);
+        console.log(selectedHoras);
+        $('#formHorarios').submit();
     }
-}
-
-function insertarDH(dias, selectedHoras) {
-    $.ajax({
-        type: "POST",
-        url: "../DiasHorarios/insert",
-        data: { dias: dias, horas: selectedHoras },
-        success: function (data) {
-            if (data[0] != 0) {
-                limpiarCampos();
-                alert("Se han guardado " + data[0] + " horarios correctamente");
-            } else if (data[1] == 0){
-                alert("Los cambios no se guardaron. Error en la base de datos");
-            }
-            if (data[1] == 1) {
-                alert("Seleccionaste " + data[1] + " horario repetido");
-            } else if(data[1] > 1) {
-                alert("Seleccionaste " + data[1] + " horarios repetidos");
-            }
-        },
-    });
-}
+});
 

@@ -22,17 +22,6 @@ namespace ConsultorioMVC.Controllers
             ViewBag.listadoHorarios = listadoHorarios();
             return View();
         }
-        [HttpPost]
-        public ActionResult Inicio(Models.Turno turno)
-        {
-            ViewBag.listadoObrasSociales = listadoObrasSociales();
-            ViewBag.listadoHorarios = listadoHorarios();
-            if (ModelState.IsValid)
-            {
-                return View(turno);
-            }
-            return RedirectToAction(nameof(Inicio));
-        }
         public JsonResult getAll(string dia)
         {
             var query = from dh in bd.DiaHorarios
@@ -125,89 +114,83 @@ namespace ConsultorioMVC.Controllers
         [HttpPost]
         public void Save(Models.Turno turno)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                var diaH = (from dh in bd.DiaHorarios
-                            where dh.dia == turno.DiaHorario.Dia
-                            && dh.horario_id == turno.DiaHorario.Horario.ID
-                            select dh).FirstOrDefault();
-                diaH.disponible = false;
-
-                var repetido = bd.Turnos.Where(t => t.DiaHorario.dia.Equals(turno.DiaHorario.Dia) && t.DiaHorario.horario_id.Equals(turno.DiaHorario.Horario.ID)).FirstOrDefault();
-
-                if (repetido == null) {
-                    if (turno.ID == 0)
-                    {
-                        Persona persona = new Persona
-                        {
-                            nombre = toUpperFirst(turno.Persona.Nombre),
-                            apellido = toUpperFirst(turno.Persona.Apellido),
-                            telefono = toNumber(turno.Persona.Telefono),
-                            obra_social_id = turno.Persona.ObraSocial.ID,
-                            correo = turno.Persona.Correo
-                        };
-
-                        var turnoNew = new Turno
-                        {
-                            dia_horario_id = diaH.id
-                        };
-
-                        using (var transaccion = new TransactionScope())
-                        {
-                            bd.Personas.InsertOnSubmit(persona);
-                            bd.SubmitChanges();
-
-                            turnoNew.persona_id = persona.id;
-                            bd.Turnos.InsertOnSubmit(turnoNew);
-                            bd.SubmitChanges();
-                            transaccion.Complete();
-                        }
-                        ViewBag.Message = "El turno se guardó correctamente";
-                    }
-                    else
-                    {
-                        var turnoActual = (from t in bd.Turnos
-                                          where t.id == turno.ID
-                                          select t).First();
-                        var persona = (from p in bd.Personas
-                                       where p.id == turno.Persona.ID
-                                       select p).First();
-                        var diaHOld = (from dh in bd.DiaHorarios
-                                       where dh.id == turno.DiaHorario.ID
-                                       select dh).First();
-
-                        persona.nombre = turno.Persona.Nombre;
-                        persona.apellido = turno.Persona.Apellido;
-                        persona.telefono = turno.Persona.Telefono;
-                        persona.correo = turno.Persona.Correo;
-                        persona.obra_social_id = turno.Persona.ObraSocial.ID;
-
-                        turnoActual.persona_id = turno.Persona.ID;
-                        turnoActual.dia_horario_id = diaH.id;
-
-                        if (diaHOld.id != diaH.id)
-                        {
-                            diaHOld.disponible =  true;
-                        }
-
-                        bd.SubmitChanges();
-                        ViewBag.Message = "El turno se guardó correctamente";
-                    }
-                }
-                else
+                try
                 {
-                    ViewBag.Message = "El turno ya ha sido otorgado";
-                    ViewBag.Error = 1;
-                }
+                    var diaH = (from dh in bd.DiaHorarios
+                                where dh.dia == turno.DiaHorario.Dia
+                                && dh.horario_id == turno.DiaHorario.Horario.ID
+                                select dh).FirstOrDefault();
+                    diaH.disponible = false;
 
+                    var repetido = bd.Turnos.Where(t => t.DiaHorario.dia.Equals(turno.DiaHorario.Dia) && t.DiaHorario.horario_id.Equals(turno.DiaHorario.Horario.ID) && !t.id.Equals(turno.ID)).FirstOrDefault();
+
+                    if (repetido == null) {
+                        if (turno.ID == 0)
+                        {
+                            Persona persona = new Persona
+                            {
+                                nombre = toUpperFirst(turno.Persona.Nombre),
+                                apellido = toUpperFirst(turno.Persona.Apellido),
+                                telefono = toNumber(turno.Persona.Telefono),
+                                obra_social_id = turno.Persona.ObraSocial.ID,
+                                correo = turno.Persona.Correo
+                            };
+
+                            var turnoNew = new Turno
+                            {
+                                dia_horario_id = diaH.id
+                            };
+
+                            using (var transaccion = new TransactionScope())
+                            {
+                                bd.Personas.InsertOnSubmit(persona);
+                                bd.SubmitChanges();
+
+                                turnoNew.persona_id = persona.id;
+                                bd.Turnos.InsertOnSubmit(turnoNew);
+                                bd.SubmitChanges();
+                                transaccion.Complete();
+                            }
+                        }
+                        else
+                        {
+                            var turnoActual = (from t in bd.Turnos
+                                              where t.id == turno.ID
+                                              select t).First();
+                            var persona = (from p in bd.Personas
+                                           where p.id == turno.Persona.ID
+                                           select p).First();
+                            var diaHOld = (from dh in bd.DiaHorarios
+                                           where dh.id == turno.DiaHorario.ID
+                                           select dh).First();
+
+                            persona.nombre = turno.Persona.Nombre;
+                            persona.apellido = turno.Persona.Apellido;
+                            persona.telefono = turno.Persona.Telefono;
+                            persona.correo = turno.Persona.Correo;
+                            persona.obra_social_id = turno.Persona.ObraSocial.ID;
+
+                            turnoActual.persona_id = turno.Persona.ID;
+                            turnoActual.dia_horario_id = diaH.id;
+
+                            if (diaHOld.id != diaH.id)
+                            {
+                                diaHOld.disponible =  true;
+                            }
+
+                            bd.SubmitChanges();
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+                ViewBag.listadoObrasSociales = listadoObrasSociales();
+                ViewBag.listadoHorarios = listadoHorarios();
             }
-            catch (Exception)
-            {
-                ViewBag.Message = "Hubo un error al guardar el turno";
-                ViewBag.Error = 1;
-            }
-            ViewBag.listadoObrasSociales = listadoObrasSociales();
-            ViewBag.listadoHorarios = listadoHorarios();
         }
         [HttpPost]
         public ActionResult Delete(Models.Turno turno)

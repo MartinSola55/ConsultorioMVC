@@ -42,7 +42,14 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content d-flex flex-column px-5" id="NotifContainer" style="background-color: yellowgreen;">
                         <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <h3 id="txtNotification" style="color: black;" class="text-center fw-bold mb-3"><i class="bi bi-info-circle"></i>&nbsp;@ViewBag.Message<br /><br />@ViewBag.EmailMessage</h3>
+                        <h3 id="txtNotification" style="color: black;" class="text-center fw-bold mb-3">
+                            <i class="bi bi-info-circle"></i>
+                            &nbsp;@ViewBag.Message
+                            <br />
+                            Día: @Model.DiaHorario.Dia.ToShortDateString() - Hora: @Model.DiaHorario.Horario.Hora.ToShortTimeString()
+                            <br />
+                            @ViewBag.EmailMessage
+                        </h3>
                     </div>
                 </div>
             </div>

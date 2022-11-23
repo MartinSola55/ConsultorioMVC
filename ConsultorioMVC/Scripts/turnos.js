@@ -9,6 +9,14 @@ $("#datepicker").removeAttr("data-val-date");
 
 listarInicial(hoy);
 
+if ($("#txtNotification").html() !== "") {
+    $("#btnModal").click();
+}
+
+setTimeout(function () {
+    $("#btnCerrar").click();
+}, 6000)
+
 function listarInicial(dia) {
     $.get("../Turnos/getAll/?dia=" + dia, function (data) {
         listadoTurnos(header, data);

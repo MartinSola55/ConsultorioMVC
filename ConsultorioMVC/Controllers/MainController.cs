@@ -77,6 +77,7 @@ namespace ConsultorioMVC.Controllers
             var lista = bd.ObrasSociales.Where(p => p.habilitada && !p.nombre.Equals("PARTICULAR")).Select(p => new { p.id, p.nombre, p.habilitada }).OrderBy(p => p.nombre);
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
         public ActionResult Save(Models.Turno turno)
         {
             if (!ModelState.IsValid)
@@ -173,7 +174,7 @@ namespace ConsultorioMVC.Controllers
                 }
                 ViewBag.listadoObrasSociales = listadoObrasSociales();
                 ViewBag.listadoHorarios = listadoHorarios();
-                return View("Inicio");
+                return View("Inicio", turno);
             }
             ViewBag.listadoObrasSociales = listadoObrasSociales();
             ViewBag.listadoHorarios = listadoHorarios();

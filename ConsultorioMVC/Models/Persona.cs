@@ -21,7 +21,7 @@ namespace ConsultorioMVC.Models
         public string Apellido { set; get; }
 
         [Required(ErrorMessage = "Debes añadir un teléfono")]
-        [Phone(ErrorMessage = "Debes añadir un teléfono válido")]
+        [RegularExpression("^[0-9]+$", ErrorMessage = "Debes añadir un teléfono válido")]
         public string Telefono { set; get; }
 
         [EmailAddress(ErrorMessage = "Debes ingresar un formato de email válido")]
