@@ -17,7 +17,7 @@ namespace ConsultorioMVC.Models
 
         [Required(ErrorMessage = "Debes añadir un apellido")]
         [StringLength(30, ErrorMessage = "Debes añadir un apellido de menos de 30 caracteres")]
-        [RegularExpression(@"^[a-zA-Z\u00C0-\u017F\s]+$", ErrorMessage = "Ingrese un apellido válido")]
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u017F\s']+$", ErrorMessage = "Ingrese un apellido válido")]
         public string Apellido { set; get; }
 
         [Required(ErrorMessage = "Debes añadir un teléfono")]
