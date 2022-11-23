@@ -159,13 +159,12 @@ namespace ConsultorioMVC.Controllers
                         {
                                 ViewBag.EmailMessage = "No ha sido posible enviar el recordatorio por correo";
                         }
-
+                        turno.DiaHorario.Horario.Hora = diaH.Horario.hora;
                     } else
                     {
                         ViewBag.Message = "El turno ya ha sido otorgado";
                         ViewBag.Error = 1;
                     }
-
                 }
                 catch (Exception)
                 {
