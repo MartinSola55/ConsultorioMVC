@@ -154,12 +154,14 @@ jQuery('#btnAgregar').on('click', function () {
     limpiarCampos();
     habilitarCampos();
     $("#staticBackdropLabel").text("Agregar paciente");
+    $('#txtID').prop("disabled", "disabled");
 });
 
 function modalEdit(id) {
     $("#staticBackdropLabel").text("Editar paciente");
     limpiarCampos();
     habilitarCampos();
+    addValid();
     $.get("../Pacientes/getOne/?id=" + id, function (data) {
         console.log(data);
         $("#txtID").val(data[0]['id']);
@@ -181,6 +183,7 @@ function modalDelete(id) {
     $("#staticBackdropLabel").text("Eliminar paciente");
     limpiarCampos();
     deshabilitarCampos();
+    addValid();
     $("#btnAceptar").addClass("eliminar");
     $.get("../Pacientes/getOne/?id=" + id, function (data) {
         $("#txtID").val(data[0]['id']);
@@ -202,6 +205,16 @@ function modalDelete(id) {
 
 function selectPaciente(id) {
     window.location.href = "/Pacientes/DatosPaciente/" + id;
+}
+
+function addValid() {
+    $("#txtNombre").addClass("valid");
+    $("#txtApellido").addClass("valid");
+    $("#txtTelefono").addClass("valid");
+    $("#txtDireccion").addClass("valid");
+    $("#txtLocalidad").addClass("valid");
+    $("#txtNacimiento").addClass("valid");
+    $("#comboOS").addClass("valid");
 }
 
 function limpiarCampos() {
@@ -235,7 +248,7 @@ $('#btnAceptar').on('click', function (e) {
 
 function confirmarCambios() {
     if ($("#btnAceptar").hasClass("eliminar")) {
-        if (confirm("¿Seguro que desea eliminar la obra social?") == 1) {
+        if (confirm("¿Seguro que desea eliminar el paciente?") == 1) {
             $("#formPaciente").attr("action", "/Pacientes/Delete");
             $("#formPaciente").submit();
         }

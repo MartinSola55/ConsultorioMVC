@@ -48,14 +48,17 @@ $.get("/Pacientes/getOne/?id=" + idPaciente, function (data) {
     $("#txtLocalidad").val(data[0]['localidad']);
     let fecha_nac = '';
     if (data[0]['fecha_nac'] != null) {
-        fecha_nac = formatDate(data[0]['fecha_nac'])
+        fecha_nac = formatDate(data[0]['fecha_nac']);
         $("#txtNacimiento").val(fecha_nac + " - " + calculateAge(fecha_nac) + " años");
     }
     $("#txtOS").val(data[0]['nombreOS']);
 });
 
 function calculateAge(birthday) { // birthday is a date
-    var ageDifMs = Date.now() - new Date(birthday);
+    var dateParts = birthday.split("/");
+    // month is 0-based, that's why we need dataParts[1] - 1
+    var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+    var ageDifMs = Date.now() - dateObject;
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
     return Math.abs(ageDate.getUTCFullYear() - 1970);
 }

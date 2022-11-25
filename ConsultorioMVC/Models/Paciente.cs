@@ -32,7 +32,7 @@ namespace ConsultorioMVC.Models
 
         [Required(ErrorMessage = "Debes añadir una dirección")]
         [StringLength(50, ErrorMessage = "Debes añadir una dirección de menos de 50 caracteres")]
-        [RegularExpression(@"^[a-zA-Z\u00C0-\u017F\s0-9]+$", ErrorMessage = "Ingrese una dirección válida")]
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u017F\s0-9.]+$", ErrorMessage = "Ingrese una dirección válida")]
         public string Direccion { get; set; }
 
         [Required(ErrorMessage = "Debes añadir una localidad")]

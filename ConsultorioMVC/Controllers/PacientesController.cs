@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Linq.SqlClient;
 using ConsultorioMVC.Models;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace ConsultorioMVC.Controllers
 {
@@ -54,6 +56,16 @@ namespace ConsultorioMVC.Controllers
                             };
             return Json(paciente, JsonRequestBehavior.AllowGet);
         }
+        public string toUpperFirst(string titulo)
+        {
+            titulo = Regex.Replace(titulo, @"[^A-Za-z\u00C0-\u017F\s']", string.Empty);
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(titulo.ToLower());
+        }
+        public string toNumber(string numero)
+        {
+            numero = Regex.Replace(numero, @"[^0-9]", string.Empty);
+            return numero;
+        }
         [HttpPost]
         public ActionResult Save(Models.Paciente pac)
         {
@@ -62,12 +74,12 @@ namespace ConsultorioMVC.Controllers
                     Paciente paciente = new Paciente
                     {
                         id = pac.ID,
-                        nombre = pac.Nombre,
-                        apellido = pac.Apellido,
+                        nombre = this.toUpperFirst(pac.Nombre),
+                        apellido = this.toUpperFirst(pac.Apellido),
                         direccion = pac.Direccion,
                         fecha_nacimiento = pac.FechaNacimiento,
                         localidad = pac.Localidad,
-                        telefono = pac.Telefono,
+                        telefono = this.toNumber(pac.Telefono),
                         obra_social_id = pac.ObraSocial.ID
                     };
                     var repetido = bd.Pacientes
@@ -103,7 +115,7 @@ namespace ConsultorioMVC.Controllers
                         ViewBag.Error = 1;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     ViewBag.Message = "Hubo un error con la base de datos. No se ha podido guardar el paciente";
                     ViewBag.Error = 2;
@@ -119,11 +131,11 @@ namespace ConsultorioMVC.Controllers
                 Paciente pacienteOld = bd.Pacientes.Where(p => p.id.Equals(paciente.ID)).First();
                 bd.Pacientes.DeleteOnSubmit(pacienteOld);
                 bd.SubmitChanges();
-                ViewBag.Message = "El paciente se guardó correctamente";
+                ViewBag.Message = "El paciente se eliminó correctamente";
             }
             catch (Exception)
             {
-                ViewBag.Message = "Hubo un error con la base de datos. No se ha podido guardar el paciente";
+                ViewBag.Message = "Hubo un error con la base de datos. No se ha podido eliminar el paciente";
                 ViewBag.Error = 2;
             }
             ViewBag.listadoObrasSociales = listadoObrasSociales();
