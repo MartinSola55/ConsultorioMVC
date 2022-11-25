@@ -9,13 +9,15 @@ $("#datepicker").removeAttr("data-val-date");
 
 listarInicial(hoy);
 
-if ($("#txtNotification").html() !== "") {
-    $("#btnModal").click();
-}
+$(document).ready(function () {
+    if ($("#txtNotification").html() !== "") {
+        $("#btnModal").click();
+        setTimeout(function () {
+            $("#btnCerrar").click();
+        }, 4000)
+    }
+});
 
-setTimeout(function () {
-    $("#btnCerrar").click();
-}, 6000)
 
 function listarInicial(dia) {
     $.get("../Turnos/getAll/?dia=" + dia, function (data) {
@@ -160,6 +162,7 @@ function modalEdit(id) {
     $("#staticBackdropLabel").text("Editar turno");
     limpiarCampos();
     habilitarCampos();
+    $("#txtID").prop("disabled", "");
     $.get("../Turnos/getOne/?id=" + id, function (data) {
         llenarComboH(data[0]['idHorario']);
         $("#IDPersona").val(data[0]['idPersona']);
@@ -179,6 +182,7 @@ function modalDelete(id) {
     limpiarCampos();
     deshabilitarCampos();
     $("#btnAceptar").addClass("eliminar");
+    $("#txtID").prop("disabled", "");
     $.get("../Turnos/getOne/?id=" + id, function (data) {
         llenarComboH(data[0]['idHorario']);
         $("#IDPersona").val(data[0]['idPersona']);

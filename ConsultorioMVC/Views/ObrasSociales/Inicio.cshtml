@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Obras Sociales";
 }
-@model ObrasSociales
+@model ConsultorioMVC.Models.ObraSocial
 
 <link href="~/Content/mis-estilos.css" rel="stylesheet" />
 <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
@@ -93,17 +93,19 @@
                     </div>
                     <div class="modal-body contenedor-modal">
                         <label class="form-label mb-2">ID: </label>
-                        @Html.TextBoxFor(model => model.id, new { @id = "txtID", @readonly = "readonly", @class = "form-control limpiarCampo w-25 mb-3" })
+                        @Html.TextBoxFor(model => model.ID, new { @id = "txtID", @readonly = "readonly", @class = "form-control limpiarCampo w-25 mb-3" })
 
                         <label class="form-label mb-2">Nombre: </label>
-                        @Html.TextBoxFor(model => model.nombre, new { @id = "txtNombre", @type = "text", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
+                        @Html.TextBoxFor(model => model.Nombre, new { @id = "txtNombre", @type = "text", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo" })
                         <span></span>
-                        @Html.ValidationMessageFor(model => model.nombre, null, new { @class = "text-danger mb-3" })
+                        @Html.ValidationMessageFor(model => model.Nombre, null, new { @class = "text-danger mb-3" })
 
                         <label class="form-label">Habilitada: </label>
                         <div>
-                            @Html.CheckBoxFor(model => model.habilitada, new { @id = "checkHabilitada", @class = "form-check limpiarCampo habilitarCampo deshabilitarCampo", @style = "transform:scale(1.25)" })
+                            @Html.CheckBoxFor(model => model.Habilitada, new { @id = "checkHabilitada", @class = "form-check limpiarCampo habilitarCampo deshabilitarCampo", @style = "transform:scale(1.25)" })
                         </div>
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Habilitada, null, new { @class = "text-danger mb-3" })
                     </div>
                     <div class="modal-footer">
                         <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -117,7 +119,6 @@
 
 
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-<script src="~/Scripts/bootstrap.min.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script src="~/Scripts/modernizr-2.8.3.js"></script>

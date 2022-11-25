@@ -5,24 +5,35 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Linq.SqlClient;
+using ConsultorioMVC.Models;
 
 namespace ConsultorioMVC.Controllers
 {
     [Seguridad]
     public class PacientesController : Controller
     {
+        DataClasesDataContext bd = new DataClasesDataContext();
         // GET: Pacientes
         public ActionResult Inicio()
         {
+            ViewBag.listadoObrasSociales = listadoObrasSociales();
             return View();
         }
         public ActionResult DatosPaciente()
         {
+            if (TempData.Count == 1)
+            {
+                ViewBag.Message = TempData["Message"].ToString();
+            }
+            else if (TempData.Count == 2)
+            {
+                ViewBag.Message = TempData["Message"].ToString();
+                ViewBag.Error = TempData["Error"];
+            }
             return View();
         }
         public JsonResult getOne(int id)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var paciente = from p in bd.Pacientes
                             join osoc in bd.ObrasSociales
                                 on p.obra_social_id equals osoc.id
@@ -43,70 +54,83 @@ namespace ConsultorioMVC.Controllers
                             };
             return Json(paciente, JsonRequestBehavior.AllowGet);
         }
-        public int save(Paciente paciente)
+        [HttpPost]
+        public ActionResult Save(Models.Paciente pac)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            int regAfectados = 0;
-            try
-            {
-                int repetido = bd.Pacientes
-                        .Where(p => p.nombre.Contains(paciente.nombre)
-                        && p.apellido.Contains(paciente.apellido)
-                        && p.fecha_nacimiento.Equals(paciente.fecha_nacimiento)
-                        && !p.id.Equals(paciente.id))
-                        .Count();
-                if (repetido == 0)
+                try
                 {
-                    if (paciente.id == 0)
+                    Paciente paciente = new Paciente
                     {
-                        bd.Pacientes.InsertOnSubmit(paciente);
-                        bd.SubmitChanges();
-                        regAfectados = 1;
-                    }
-                    else
+                        id = pac.ID,
+                        nombre = pac.Nombre,
+                        apellido = pac.Apellido,
+                        direccion = pac.Direccion,
+                        fecha_nacimiento = pac.FechaNacimiento,
+                        localidad = pac.Localidad,
+                        telefono = pac.Telefono,
+                        obra_social_id = pac.ObraSocial.ID
+                    };
+                    var repetido = bd.Pacientes
+                            .Where(p => p.nombre.Contains(paciente.nombre)
+                            && p.apellido.Contains(paciente.apellido)
+                            && p.fecha_nacimiento.Equals(paciente.fecha_nacimiento)
+                            && !p.id.Equals(paciente.id))
+                            .FirstOrDefault();
+                    if (repetido == null)
                     {
-                        Paciente pacienteOld = bd.Pacientes.Where(p => p.id.Equals(paciente.id)).First();
-                        pacienteOld.nombre = paciente.nombre;
-                        pacienteOld.apellido = paciente.apellido;
-                        pacienteOld.telefono = paciente.telefono;
-                        pacienteOld.direccion = paciente.direccion;
-                        pacienteOld.localidad = paciente.localidad;
-                        pacienteOld.fecha_nacimiento = paciente.fecha_nacimiento;
-                        pacienteOld.obra_social_id = paciente.obra_social_id;
-                        bd.SubmitChanges();
-                        regAfectados = 1;
+                        if (paciente.id == 0)
+                        {
+                            bd.Pacientes.InsertOnSubmit(paciente);
+                            bd.SubmitChanges();
+                            ViewBag.Message = "El paciente se guardó correctamente";
+                        }
+                        else
+                        {
+                            Paciente pacienteOld = bd.Pacientes.Where(p => p.id.Equals(paciente.id)).First();
+                            pacienteOld.nombre = paciente.nombre;
+                            pacienteOld.apellido = paciente.apellido;
+                            pacienteOld.telefono = paciente.telefono;
+                            pacienteOld.direccion = paciente.direccion;
+                            pacienteOld.localidad = paciente.localidad;
+                            pacienteOld.fecha_nacimiento = paciente.fecha_nacimiento;
+                            pacienteOld.obra_social_id = paciente.obra_social_id;
+                            bd.SubmitChanges();
+                            ViewBag.Message = "El paciente se guardó correctamente";
+                        }
+                    } else
+                    {
+                        ViewBag.Message = "El paciente ingresado ya existe";
+                        ViewBag.Error = 1;
                     }
-                } else
-                {
-                    regAfectados = -1;
                 }
-            }
-            catch (Exception e)
-            {
-                regAfectados = 0;
-            }
-            return regAfectados;
+                catch (Exception e)
+                {
+                    ViewBag.Message = "Hubo un error con la base de datos. No se ha podido guardar el paciente";
+                    ViewBag.Error = 2;
+                }
+            ViewBag.listadoObrasSociales = listadoObrasSociales();
+            return View("Inicio");
         }
-        public int delete(Paciente paciente)
+        [HttpPost]
+        public ActionResult Delete(Models.Paciente paciente)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            int regAfectados = 0;
             try
             {
-                Paciente pacienteOld = bd.Pacientes.Where(p => p.id.Equals(paciente.id)).First();
+                Paciente pacienteOld = bd.Pacientes.Where(p => p.id.Equals(paciente.ID)).First();
                 bd.Pacientes.DeleteOnSubmit(pacienteOld);
                 bd.SubmitChanges();
-                regAfectados = 1;
+                ViewBag.Message = "El paciente se guardó correctamente";
             }
             catch (Exception)
             {
-                regAfectados = 0;
+                ViewBag.Message = "Hubo un error con la base de datos. No se ha podido guardar el paciente";
+                ViewBag.Error = 2;
             }
-            return regAfectados;
+            ViewBag.listadoObrasSociales = listadoObrasSociales();
+            return View("Inicio");
         }
         public JsonResult filtrarPacientes(string nombre, string apellido, string nacimiento, int os)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var pacientes = from p in bd.Pacientes
                             join osoc in bd.ObrasSociales
                                 on p.obra_social_id equals osoc.id
@@ -144,7 +168,7 @@ namespace ConsultorioMVC.Controllers
                 else if (os == 0)
                 {
                     pacientes = from p in pacientes
-                                where p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.fecha_nac == fechaFormated
+                                where p.nombre.Contains(nombre) && p.apellido.Contains(apellido) && p.fecha_nac.Equals(fechaFormated)
                                 select p;
                 }
                 else if (nacimiento == "")
@@ -160,7 +184,6 @@ namespace ConsultorioMVC.Controllers
         }
         public JsonResult getHistoriasClinicas(int id)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
             var hist_clinicas = from hc in bd.HistoriasClinicas
                             where hc.paciente_id == id
                             orderby hc.fecha descending
@@ -185,49 +208,82 @@ namespace ConsultorioMVC.Controllers
                                   };
             return Json(historiaClinica, JsonRequestBehavior.AllowGet);
         }
-        public int saveHC(HistoriasClinica historiaC)
+        [HttpPost]
+        public ActionResult SaveHC(Models.HistoriaClinica histc)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            int regAfectados = 0;
-            try
+            if (ModelState.IsValid)
             {
-                if (historiaC.id == 0)
+                HistoriasClinica historiaC = new HistoriasClinica
                 {
-                    bd.HistoriasClinicas.InsertOnSubmit(historiaC);
-                    bd.SubmitChanges();
-                    regAfectados = 1;
+                    id = histc.ID,
+                    descripcion = histc.Descripcion,
+                    fecha = histc.Fecha,
+                    paciente_id = histc.IDPaciente
+                };
+                try
+                {
+                    if (historiaC.id == 0)
+                    {
+                        bd.HistoriasClinicas.InsertOnSubmit(historiaC);
+                        bd.SubmitChanges();
+                        TempData["Message"] = "La historia clínica se guardó correctamente";
+                    }
+                    else
+                    {
+                        HistoriasClinica historiaOld = bd.HistoriasClinicas.Where(hc => hc.id.Equals(historiaC.id)).First();
+                        historiaOld.fecha = historiaC.fecha;
+                        historiaOld.descripcion = historiaC.descripcion;
+                        bd.SubmitChanges();
+                        TempData["Message"] = "La historia clínica se actualizó correctamente";
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    HistoriasClinica historiaOld = bd.HistoriasClinicas.Where(hc => hc.id.Equals(historiaC.id)).First();
-                    historiaOld.fecha = historiaC.fecha;
-                    historiaOld.descripcion = historiaC.descripcion;
-                    bd.SubmitChanges();
-                    regAfectados = 1;
+                    TempData["Message"] = "Hubo un error con la base de datos. No se ha podido guardar la historia clínica";
+                    TempData["Error"] = 2;
                 }
             }
-            catch (Exception)
-            {
-                regAfectados = 0;
-            }
-            return regAfectados;
+            return RedirectToAction("DatosPaciente", new { id = histc.IDPaciente });
         }
-        public int deleteHC(HistoriasClinica historiaC)
+        [HttpPost]
+        public ActionResult DeleteHC(Models.HistoriaClinica historiaC)
         {
-            DataClasesDataContext bd = new DataClasesDataContext();
-            int regAfectados = 0;
             try
             {
-                HistoriasClinica historiaOld = bd.HistoriasClinicas.Where(p => p.id.Equals(historiaC.id)).First();
+                HistoriasClinica historiaOld = bd.HistoriasClinicas.Where(hc => hc.id.Equals(historiaC.ID)).First();
                 bd.HistoriasClinicas.DeleteOnSubmit(historiaOld);
                 bd.SubmitChanges();
-                regAfectados = 1;
+                TempData["Message"] = "La historia clínica se eliminó correctamente";
             }
             catch (Exception)
             {
-                regAfectados = 0;
+                TempData["Message"] = "Hubo un error con la base de datos. No se ha podido eliminar la historia clínica";
+                TempData["Error"] = 2;
             }
-            return regAfectados;
+            return RedirectToAction("DatosPaciente", new { id = historiaC.IDPaciente });
+        }
+        public IEnumerable<SelectListItem> listadoObrasSociales()
+        {
+            IEnumerable<SelectListItem> lista = null;
+            try
+            {
+                IEnumerable<ObrasSociales> particular = bd.ObrasSociales.Where(o => o.nombre.Equals("PARTICULAR"));
+                IEnumerable<ObrasSociales> obrasSociales = bd.ObrasSociales.ToList().OrderBy(o => o.nombre).Where(o => o.habilitada.Equals(true));
+
+                LinkedList<ObrasSociales> listado = new LinkedList<ObrasSociales>();
+                listado.AddFirst(new ObrasSociales { id = particular.First().id, nombre = particular.First().nombre });
+                foreach (var item in obrasSociales)
+                {
+                    listado.AddLast(new ObrasSociales { id = item.id, nombre = item.nombre });
+                }
+
+                lista = listado.Select(o => new SelectListItem { Text = o.nombre, Value = o.id.ToString() });
+            }
+            catch (Exception)
+            {
+
+            }
+            return lista;
         }
     }
 }

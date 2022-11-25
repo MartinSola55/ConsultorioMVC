@@ -1,7 +1,46 @@
-﻿llenarCombo("filtroOS");
-let header = ["Nombre", "Apellido", "Dirección", "Localidad", "Teléfono", "Obra Social", "Fecha Nac."];
-$('#filtroNacimiento').datepicker();
-$('#txtNacimiento').datepicker();
+﻿llenarCombo();
+const header = ["Nombre", "Apellido", "Dirección", "Localidad", "Teléfono", "Obra Social", "Fecha Nac."];
+moment.locale('es');
+$("#txtNacimiento").removeAttr("data-val-date");
+
+$(document).ready(function () {
+    if ($("#txtNotification").html() !== "") {
+        $("#btnModal").click();
+        setTimeout(function () {
+            $("#btnCerrar").click();
+        }, 4000)
+    }
+});
+
+$('#filtroNacimiento').daterangepicker({
+    "locale": {
+        "applyLabel": "Aplicar",
+        "cancelLabel": "Cancelar",
+        "fromLabel": "Hasta",
+        "toLabel": "Desde",
+    },
+    singleDatePicker: true,
+    opens: 'right',
+    autoUpdateInput: false,
+    autoApply: true,
+});
+
+$('#filtroNacimiento').on('apply.daterangepicker', function (ev, picker) {
+    $('#filtroNacimiento').val(picker.startDate.format('DD/MM/YYYY'));
+});
+
+$('#txtNacimiento').daterangepicker({
+    "locale": {
+        "applyLabel": "Aplicar",
+        "cancelLabel": "Cancelar",
+        "fromLabel": "Hasta",
+        "toLabel": "Desde",
+    },
+    singleDatePicker: true,
+    opens: 'right',
+    autoUpdateInput: true,
+    autoApply: true,
+});
 
 
 function listadoPacientes(arrayHeader, data) {
@@ -78,25 +117,17 @@ function formatDate(fecha) {
     return day + '/' + month + '/' + year;
 }
 
-function llenarCombo(id) {
-    $.get("../ObrasSociales/getParticular", function (data) {
-        let control = $("#" + id);
+function llenarCombo() {
+    let control = $("#filtroOS");
+    $.get("../ObrasSociales/getHabilitadas", function (data) {
         let contenido = "";
         contenido += "<option value='0' disabled selected >--Seleccione una opción--</option>";
-        contenido += "<option value='" + data[0]['id'] + "'>";
-        contenido += data[0]['nombre'];
-        contenido += "</option>";
-        control.html(contenido);
-    });
-    $.get("../ObrasSociales/getResto", function (data) {
-        let control = $("#" + id);
-        let contenido = "";
         for (let i = 0; i < data.length; i++) {
-            contenido += "<option value='" + data[i].id + "'>";
-            contenido += data[i].nombre;
+            contenido += "<option value='" + data[i].ID + "'>";
+            contenido += data[i].Nombre;
             contenido += "</option>";
         }
-        control.append(contenido);
+        control.html(contenido);
     });
 }
 
@@ -122,7 +153,6 @@ jQuery('#limpia-filtro').on('click', function () {
 jQuery('#btnAgregar').on('click', function () {
     limpiarCampos();
     habilitarCampos();
-    llenarCombo("comboOS");
     $("#staticBackdropLabel").text("Agregar paciente");
 });
 
@@ -130,8 +160,8 @@ function modalEdit(id) {
     $("#staticBackdropLabel").text("Editar paciente");
     limpiarCampos();
     habilitarCampos();
-    llenarCombo("comboOS");
     $.get("../Pacientes/getOne/?id=" + id, function (data) {
+        console.log(data);
         $("#txtID").val(data[0]['id']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#txtApellido").val(data[0]['apellido']);
@@ -151,7 +181,6 @@ function modalDelete(id) {
     $("#staticBackdropLabel").text("Eliminar paciente");
     limpiarCampos();
     deshabilitarCampos();
-    llenarCombo("comboOS");
     $("#btnAceptar").addClass("eliminar");
     $.get("../Pacientes/getOne/?id=" + id, function (data) {
         $("#txtID").val(data[0]['id']);
@@ -172,15 +201,11 @@ function modalDelete(id) {
 }
 
 function selectPaciente(id) {
-    window.location.href = "Pacientes/DatosPaciente?id=" + id;
+    window.location.href = "/Pacientes/DatosPaciente/" + id;
 }
 
 function limpiarCampos() {
     $(".limpiarCampo").val("");
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        $("#campo" + i).removeClass("error");
-    }
     $("#btnAceptar").removeClass("eliminar");
 }
 
@@ -192,69 +217,30 @@ function deshabilitarCampos() {
     $(".deshabilitarCampo").attr("disabled", "disabled");
 }
 
+$('#btnAceptar').on('click', function (e) {
+    e.preventDefault();
+    if ($("#txtNombre").hasClass("valid") &&
+        $("#txtApellido").hasClass("valid") &&
+        $("#txtTelefono").hasClass("valid") &&
+        $("#txtDireccion").hasClass("valid") &&
+        $("#txtLocalidad").hasClass("valid") &&
+        $("#txtNacimiento").hasClass("valid") &&
+        $("#comboOS").hasClass("valid")) {
+        confirmarCambios();
+    } else {
+        $("#formPaciente").attr("action", "/Pacientes/Save");
+        $("#formPaciente").submit();
+    }
+});
+
 function confirmarCambios() {
-    if (campoRequired()) {
-        let frm = new FormData();
-        let id = $("#txtID").val();
-        let nombre = $("#txtNombre").val();
-        let apellido = $("#txtApellido").val();
-        let telefono = $("#txtTelefono").val();
-        let direccion = $("#txtDireccion").val();
-        let localidad = $("#txtLocalidad").val();
-        let fecha_nac = $("#txtNacimiento").val();
-        let obraSocial = $("#comboOS").val();
-        frm.append("id", id);
-        frm.append("nombre", nombre);
-        frm.append("apellido", apellido);
-        frm.append("telefono", telefono);
-        frm.append("direccion", direccion);
-        frm.append("localidad", localidad);
-        frm.append("fecha_nacimiento", fecha_nac);
-        frm.append("obra_social_id", obraSocial);
-        if ($("#btnAceptar").hasClass("eliminar")) {
-            if (confirm("¿Seguro que desea eliminar el paciente?") == 1) {
-                crudPaciente(frm, "delete");
-            }
-        } else {
-            crudPaciente(frm, "save");
+    if ($("#btnAceptar").hasClass("eliminar")) {
+        if (confirm("¿Seguro que desea eliminar la obra social?") == 1) {
+            $("#formPaciente").attr("action", "/Pacientes/Delete");
+            $("#formPaciente").submit();
         }
+    } else {
+        $("#formPaciente").attr("action", "/Pacientes/Save");
+        $("#formPaciente").submit();
     }
-}
-
-function campoRequired() {
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        if (campos[i].value == "" || campos[i].value == "0") {
-            $("#campo" + i).addClass("error");
-            return false;
-        } else {
-            $("#campo" + i).removeClass("error");
-        }
-    }
-    return true;
-}
-
-function crudPaciente(frm, action) {
-    $.ajax({
-        type: "POST",
-        url: "../Pacientes/" + action,
-        data: frm,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            if (data == 1) {
-                if ($("#btnAceptar").hasClass("eliminar")) {
-                    alert("El paciente se eliminó correctamente");
-                } else {
-                    alert("El paciente se guardó correctamente");
-                }
-                $('#buscar-filtro').click();
-                $("#btnCancelar").click();
-            } else if (data == -1) {
-                alert("Ya existe un paciente con los datos ingresados");
-            } else {
-                alert("Los cambios no se guardaron. Error en la base de datos");
-            }
-        }
-    });
 }

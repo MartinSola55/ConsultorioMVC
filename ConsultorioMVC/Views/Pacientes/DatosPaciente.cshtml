@@ -1,12 +1,41 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Datos del paciente";
 }
+@model ConsultorioMVC.Models.HistoriaClinica
 
 <link href="~/Content/mis-estilos.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui.structure.min.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui.theme.min.css" rel="stylesheet" />
+<link href="~/Content/daterangepicker.css" rel="stylesheet" />
+
+@{ if (ViewBag.Message != null)
+    {
+        if (ViewBag.Error == 2)
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="modalNotif" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column" id="NotifContainer" style="background-color: crimson;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" class="fw-bold text-center text-white mb-3"><i class="bi bi-exclamation-diamond"></i>&nbsp;@ViewBag.Message<br /></h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#modalNotif'></button>
+        }
+        else
+        {
+            <!-- Modal -->
+            <div class="modal fade" id="modalNotif" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content d-flex flex-column px-5" id="NotifContainer" style="background-color: yellowgreen;">
+                        <button type="button" id="btnCerrar" class="btn-close mb-3 align-self-end justify-content-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 id="txtNotification" style="color: black;" class="text-center fw-bold mb-3"><i class="bi bi-info-circle"></i>&nbsp;@ViewBag.Message<br /></h3>
+                    </div>
+                </div>
+            </div>
+            <button id="btnModal" style="display: none" data-bs-toggle='modal' data-bs-target='#modalNotif'></button>
+        }
+    }
+}
 
 <h1 class="text-center mb-4">Datos del paciente</h1>
 
@@ -38,7 +67,7 @@
 
 </div>
 
-<hr class="mt-5"/>
+<hr class="mt-5" />
 
 <h2 class="text-center mb-4">Historias clínicas</h2>
 
@@ -46,35 +75,51 @@
 
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body contenedor-modal">
-                <label class="mb-2">ID: </label>
-                <input id="txtID" type="text" class="form-control limpiarCampo w-25 mb-2" disabled />
+@{
+    using (Html.BeginForm("", "", FormMethod.Post, new { @id = "formHC", @class = "formPaciente container-fluid sombra", @style = "max-width: 600px" }))
+    {
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body contenedor-modal">
+                        @Html.HiddenFor(model => model.IDPaciente, new { @id = "txtPacienteID" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.IDPaciente, null, new { @class = "text-danger mb-3" })
 
-                <label class="mb-2 campo0">Fecha: </label>
-                <input id="txtFecha" type="text" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" />
+                        <label class="mb-2">ID: </label>
+                        @Html.TextBoxFor(model => model.ID, new { @id = "txtID", @readonly = "readonly", @class = "form-control limpiarCampo w-25 mb-3" })
 
-                <label class="mb-2 campo1">Descripción: </label>
-                <textarea id="txtDescripcion" cols="80" rows="20" class="form-control limpiarCampo habilitarCampo deshabilitarCampo required mb-2" style="height: 7rem"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
-                <button id="btnAceptar" onclick="confirmarCambios()" type="button" class="btn btn-success">Aceptar</button>
+                        <label class="mb-2">Fecha: </label>
+                        @Html.TextBoxFor(model => model.Fecha, new { @id = "txtFecha", @readonly = "readonly", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo", @placeholder = "dd/mm/aaaa" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Fecha, null, new { @class = "text-danger mb-3" })
+
+                        <label class="mb-2">Descripción: </label>
+                        @Html.TextAreaFor(model => model.Descripcion, new { @id = "txtDescripcion", @cols = "80", @rows = "20", @style = "height: 7rem", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo", @placeholder = "Ingresa una observación" })
+                        <span></span>
+                        @Html.ValidationMessageFor(model => model.Descripcion, null, new { @class = "text-danger mb-3" })
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCancelar" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                        <button id="btnAceptar" type="submit" class="btn btn-success">Aceptar</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
+    }
+}
 
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
 <script src="~/Scripts/jquery-ui.min.js"></script>
-<script src="~/Scripts/datepicker-es.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/moment-with-locales.js"></script>
+<script src="~/Scripts/daterangepicker.js"></script>
+<script src="~/Scripts/daterangepicker-es.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 <script src="~/Scripts/historias-clinicas.js"></script>

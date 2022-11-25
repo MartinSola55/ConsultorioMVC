@@ -1,10 +1,11 @@
-﻿$.urlParam = function (name) {
-	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-	return results[1] || 0;
-}
-
+﻿var idPaciente = window.location.pathname.split("/").pop();
 listarHC();
-$('#txtFecha').datepicker();
+$("#txtFecha").removeAttr("data-val-date");
+var hoy = new Date();
+let dd = String(hoy.getDate()).padStart(2, '0');
+let mm = String(hoy.getMonth() + 1).padStart(2, '0');
+let yyyy = hoy.getFullYear();
+hoy = dd + '/' + mm + '/' + yyyy;
 
 function formatDate(fecha) {
     var datePart = fecha.match(/\d+/g),
@@ -13,7 +14,33 @@ function formatDate(fecha) {
     return day + '/' + month + '/' + year;
 }
 
-$.get("../Pacientes/getOne/?id=" + $.urlParam('id'), function (data) {
+$(document).ready(function () {
+    if ($("#txtNotification").html() !== "") {
+        $("#btnModal").click();
+        setTimeout(function () {
+            $("#btnCerrar").click();
+        }, 4000)
+    }
+});
+
+moment.locale('es');
+$(function () {
+    $("#txtFecha").daterangepicker({
+        "autoApply": true,
+        "locale": {
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Hasta",
+            "toLabel": "Desde",
+        },
+        singleDatePicker: true,
+        opens: 'right',
+        autoUpdateInput: true,
+        autoApply: true
+    })
+});
+
+$.get("/Pacientes/getOne/?id=" + idPaciente, function (data) {
     $("#txtNombre").val(data[0]['nombre']);
     $("#txtApellido").val(data[0]['apellido']);
     $("#txtTelefono").val(data[0]['telefono']);
@@ -22,13 +49,19 @@ $.get("../Pacientes/getOne/?id=" + $.urlParam('id'), function (data) {
     let fecha_nac = '';
     if (data[0]['fecha_nac'] != null) {
         fecha_nac = formatDate(data[0]['fecha_nac'])
+        $("#txtNacimiento").val(fecha_nac + " - " + calculateAge(fecha_nac) + " años");
     }
-    $("#txtNacimiento").val(fecha_nac);
     $("#txtOS").val(data[0]['nombreOS']);
 });
 
+function calculateAge(birthday) { // birthday is a date
+    var ageDifMs = Date.now() - new Date(birthday);
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
 function listarHC() {
-    $.get("../Pacientes/getHistoriasClinicas/?id=" + $.urlParam('id'), function (data) {
+    $.get("/Pacientes/getHistoriasClinicas/?id=" + idPaciente, function (data) {
         let contenedor = $('#tarjetasHC');
         let tarjeta = "";
         for (let i = 0; i < data.length; i++) {
@@ -52,16 +85,19 @@ jQuery('#btnAgregar').on('click', function () {
     limpiarCampos();
     habilitarCampos();
     $("#staticBackdropLabel").text("Agregar historia clínica");
-    $('#txtFecha').datepicker('setDate', 'today');
+    $('#txtFecha').val(hoy);
+    $('#txtID').prop("disabled", "disabled");
 });
 
 function modalEdit(id) {
     $("#staticBackdropLabel").text("Editar historia clínica");
     limpiarCampos();
     habilitarCampos();
-    $.get("../Pacientes/getHC/?id=" + id, function (data) {
+    $("#txtFecha").addClass("valid");
+    $("#txtDescripcion").addClass("valid");
+    $.get("/Pacientes/getHC/?id=" + id, function (data) {
         $("#txtID").val(data[0]['idHC']);
-        $("#txtFecha").val(data[0]['fecha']);
+        $("#txtFecha").val(formatDate(data[0]['fecha']));
         $("#txtDescripcion").val(data[0]['descripcion']);
     });
 }
@@ -71,9 +107,11 @@ function modalDelete(id) {
     limpiarCampos();
     deshabilitarCampos();
     $("#btnAceptar").addClass("eliminar");
-    $.get("../Pacientes/getHC/?id=" + id, function (data) {
+    $("#txtFecha").addClass("valid");
+    $("#txtDescripcion").addClass("valid");
+    $.get("/Pacientes/getHC/?id=" + id, function (data) {
         $("#txtID").val(data[0]['idHC']);
-        $("#txtFecha").val(data[0]['fecha']);
+        $("#txtFecha").val(formatDate(data[0]['fecha']));
         $("#txtDescripcion").val(data[0]['descripcion']);
     });
     let frm = new FormData();
@@ -82,10 +120,6 @@ function modalDelete(id) {
 
 function limpiarCampos() {
     $(".limpiarCampo").val("");
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        $(".campo" + i).removeClass("error");
-    }
     $("#btnAceptar").removeClass("eliminar");
 }
 
@@ -97,58 +131,25 @@ function deshabilitarCampos() {
     $(".deshabilitarCampo").attr("disabled", "disabled");
 }
 
-function campoRequired() {
-    let valido = true;
-    campos = $(".required");
-    for (let i = 0; i < campos.length; i++) {
-        if (campos[i].value == "") {
-            valido = false;
-            $(".campo" + i).addClass("error");
-        } else {
-            $(".campo" + i).removeClass("error");
-        }
+$('#btnAceptar').on('click', function (e) {
+    e.preventDefault();
+    $("#txtPacienteID").val(idPaciente);
+    if ($("#txtFecha").hasClass("valid") && $("#txtDescripcion").hasClass("valid")) {
+        confirmarCambios();
+    } else {
+        $("#formHC").attr("action", "/Pacientes/SaveHC");
+        $("#formHC").submit();
     }
-    return valido;
-}
+});
 
 function confirmarCambios() {
-    if (campoRequired()) {
-        let frm = new FormData();
-        let id = $("#txtID").val();
-        let fecha = $("#txtFecha").val();
-        let descripcion = $("#txtDescripcion").val();
-        let paciente_id = $.urlParam('id');
-        frm.append("id", id);
-        frm.append("fecha", fecha);
-        frm.append("descripcion", descripcion);
-        frm.append("paciente_id", paciente_id);
-        if ($("#btnAceptar").hasClass("eliminar")) {
-            if (confirm("¿Seguro que desea eliminar la historia clínica?") == 1) {
-                crudHC(frm, "deleteHC");
-            }
-        } else {
-            crudHC(frm, "saveHC");
+    if ($("#btnAceptar").hasClass("eliminar")) {
+        if (confirm("¿Seguro que desea eliminar la historia clínica?") == 1) {
+            $("#formHC").attr("action", "/Pacientes/DeleteHC");
+            $("#formHC").submit();
         }
+    } else {
+        $("#formHC").attr("action", "/Pacientes/SaveHC");
+        $("#formHC").submit();
     }
-}
-
-function crudHC(frm, action) {
-    $.ajax({
-        type: "POST",
-        url: "../Pacientes/" + action,
-        data: frm,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            listarHC();
-            if (data != 0) {
-                if ($("#btnAceptar").hasClass("eliminar")) {
-                    alert("La historia clínica se eliminó correctamente");
-                }
-                $("#btnCancelar").click();
-            } else {
-                alert("Los cambios no se guardaron. Error en la base de datos");
-            }
-        }
-    });
 }

@@ -109,8 +109,8 @@ function modalEdit(id) {
     $("#staticBackdropLabel").text("Editar obra social");
     limpiarCampos();
     habilitarCampos();
+    $("#txtNombre").addClass("valid");
     $.get("../ObrasSociales/getOne/?id=" + id, function (data) {
-        console.log(data);
         $("#txtID").val(data[0]['id']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#checkHabilitada").prop('checked', data[0]['habilitada']);
@@ -122,9 +122,9 @@ function modalDelete(id) {
     $("#staticBackdropLabel").text("Eliminar obra social");
     limpiarCampos();
     deshabilitarCampos();
+    $("#txtNombre").addClass("valid");
     $("#btnAceptar").addClass("eliminar");
     $.get("../ObrasSociales/getOne/?id=" + id, function (data) {
-        console.log(data[0]['nombre']);
         $("#txtID").val(data[0]['id']);
         $("#txtNombre").val(data[0]['nombre']);
         $("#checkHabilitada").prop('checked', data[0]['habilitada']);
@@ -168,7 +168,11 @@ $("#checkHabilitada").on('change', function () {
 
 $('#btnAceptar').on('click', function (e) {
     e.preventDefault();
-    if ($("#txtNombre").hasClass("valid") || $("#txtID").val() != "") {
+    if ($("#txtNombre").hasClass("valid")) {
         confirmarCambios();
+        return;
+    } else {
+        $("#formOS").attr("action", "/ObrasSociales/Save");
+        $("#formOS").submit();
     }
 });

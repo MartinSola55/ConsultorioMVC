@@ -53,12 +53,18 @@ namespace ConsultorioMVC.Controllers
             return Json(resto, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult Save(ObrasSociales os)
+        public ActionResult Save(ObraSocial obraSocial)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    ObrasSociales os = new ObrasSociales
+                    {
+                        id = obraSocial.ID,
+                        habilitada = obraSocial.Habilitada,
+                        nombre = obraSocial.Nombre,
+                    };
                     var repetido = bd.ObrasSociales
                         .Where(p => p.nombre.Equals(os.nombre) && !p.id.Equals(os.id)).FirstOrDefault();
                     if (repetido == null)
