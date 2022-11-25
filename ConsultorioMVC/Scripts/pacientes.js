@@ -8,7 +8,7 @@ $(document).ready(function () {
         $("#btnModal").click();
         setTimeout(function () {
             $("#btnCerrar").click();
-        }, 4000)
+        }, 1500)
     }
 });
 

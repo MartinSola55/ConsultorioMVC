@@ -8,6 +8,7 @@ using System.Data.Linq.SqlClient;
 using ConsultorioMVC.Models;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Data.SqlClient;
 
 namespace ConsultorioMVC.Controllers
 {
@@ -133,8 +134,17 @@ namespace ConsultorioMVC.Controllers
                 bd.SubmitChanges();
                 ViewBag.Message = "El paciente se eliminó correctamente";
             }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547)
+                {
+                    ViewBag.Message = "No se ha podido eliminar el paciente. Primero debes eliminar sus historias clínicas";
+                    ViewBag.Error = 1;
+                }
+            }
             catch (Exception)
             {
+                
                 ViewBag.Message = "Hubo un error con la base de datos. No se ha podido eliminar el paciente";
                 ViewBag.Error = 2;
             }

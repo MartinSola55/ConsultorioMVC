@@ -15,7 +15,7 @@ namespace ConsultorioMVC.Models
         public int IDPaciente { get; set; }
 
         [Required(ErrorMessage = "Debes ingresar una descripción")]
-        [StringLength(500, ErrorMessage = "Debes añadir una descripción de menos de 500 caracteres")]
+        [StringLength(1500, ErrorMessage = "Debes añadir una descripción de menos de 1500 caracteres")]
         [RegularExpression(@"^[a-zA-Z\u00C0-\u017F\s\n0-9.-]+$", ErrorMessage = "Ingrese una descripción válida")]
         public string Descripcion { get; set; }
 
