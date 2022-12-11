@@ -45,8 +45,8 @@ $('#txtNacimiento').daterangepicker({
 
 function listadoPacientes(arrayHeader, data) {
     let contenido = "";
-    contenido += "<table id='tabla-generic' class='table table-oscura table-striped table-bordered table-hover'>";
-    contenido += "<thead>";
+    contenido += "<table id='tabla-generic' class='container table table-light table-striped table-bordered table-hover'>";
+    contenido += "<thead class='table-dark'>";
     contenido += "<tr class='fw-bold'>";
     for (let i = 0; i < arrayHeader.length; i++) {
         contenido += "<td class='text-center'>";
@@ -77,9 +77,9 @@ function listadoPacientes(arrayHeader, data) {
         contenido += "<td>" + nombreOS + "</td>";
         contenido += "<td>" + fecha_nac + "</td>";
         contenido += "<td class='d-flex justify-content-center'>";
-        contenido += "<button class='btn btn-outline-success me-2 py-1' onclick='modalEdit(" + data[i]['id'] + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-pencil-square'></i></button>";
-        contenido += "<button class='btn btn-outline-danger mx-2' onclick='modalDelete(" + data[i]['id'] + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-trash3'></i></button>";
-        contenido += "<button class='btn btn-outline-light ms-2' onclick='selectPaciente(" + data[i]['id'] + ")'>Seleccionar</button>";
+        contenido += "<button class='btn btn-success me-2 py-1' onclick='modalEdit(" + data[i]['id'] + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-pencil-square'></i></button>";
+        contenido += "<button class='btn btn-danger mx-2' onclick='modalDelete(" + data[i]['id'] + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-trash3'></i></button>";
+        contenido += "<button class='btn btn-dark ms-2' onclick='selectPaciente(" + data[i]['id'] + ")'>Seleccionar</button>";
         contenido += "</td>";
         contenido += "</tr>";
     }

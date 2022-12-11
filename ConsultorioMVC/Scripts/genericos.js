@@ -4,8 +4,8 @@
 
 function listado(arrayHeader, data) {
     let contenido = "";
-    contenido += "<table id='tabla-generic' class='table table-dark table-striped table-bordered table-hover'>";
-    contenido += "<thead>";
+    contenido += "<table id='tabla-generic' class='container table table-light table-striped table-bordered table-hover'>";
+    contenido += "<thead class='table-dark'>";
     contenido += "<tr class='text-center'>";
     for (let i = 0; i < arrayHeader.length; i++) {
         contenido += "<td>";

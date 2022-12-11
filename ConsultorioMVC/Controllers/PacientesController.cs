@@ -242,27 +242,36 @@ namespace ConsultorioMVC.Controllers
                     fecha = histc.Fecha,
                     paciente_id = histc.IDPaciente
                 };
-                try
+                var repetido = bd.HistoriasClinicas
+                            .Where(h => h.descripcion.Equals(historiaC.descripcion)
+                            && h.fecha.Equals(historiaC.fecha)
+                            && h.paciente_id.Equals(historiaC.paciente_id)
+                            && !h.id.Equals(historiaC.id))
+                            .FirstOrDefault();
+                if (repetido == null)
                 {
-                    if (historiaC.id == 0)
+                    try
                     {
-                        bd.HistoriasClinicas.InsertOnSubmit(historiaC);
-                        bd.SubmitChanges();
-                        TempData["Message"] = "La historia clínica se guardó correctamente";
+                        if (historiaC.id == 0)
+                        {
+                            bd.HistoriasClinicas.InsertOnSubmit(historiaC);
+                            bd.SubmitChanges();
+                            TempData["Message"] = "La historia clínica se guardó correctamente";
+                        }
+                        else
+                        {
+                            HistoriasClinica historiaOld = bd.HistoriasClinicas.Where(hc => hc.id.Equals(historiaC.id)).First();
+                            historiaOld.fecha = historiaC.fecha;
+                            historiaOld.descripcion = historiaC.descripcion;
+                            bd.SubmitChanges();
+                            TempData["Message"] = "La historia clínica se actualizó correctamente";
+                        }
                     }
-                    else
+                    catch (Exception)
                     {
-                        HistoriasClinica historiaOld = bd.HistoriasClinicas.Where(hc => hc.id.Equals(historiaC.id)).First();
-                        historiaOld.fecha = historiaC.fecha;
-                        historiaOld.descripcion = historiaC.descripcion;
-                        bd.SubmitChanges();
-                        TempData["Message"] = "La historia clínica se actualizó correctamente";
+                        TempData["Message"] = "Hubo un error con la base de datos. No se ha podido guardar la historia clínica";
+                        TempData["Error"] = 2;
                     }
-                }
-                catch (Exception)
-                {
-                    TempData["Message"] = "Hubo un error con la base de datos. No se ha podido guardar la historia clínica";
-                    TempData["Error"] = 2;
                 }
             }
             return RedirectToAction("DatosPaciente", new { id = histc.IDPaciente });

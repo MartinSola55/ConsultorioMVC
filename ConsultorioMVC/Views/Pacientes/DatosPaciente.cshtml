@@ -100,7 +100,7 @@
                         @Html.ValidationMessageFor(model => model.Fecha, null, new { @class = "text-danger mb-3" })
 
                         <label class="mb-2">Descripción: </label>
-                        @Html.TextAreaFor(model => model.Descripcion, new { @id = "txtDescripcion", @cols = "80", @rows = "20", @style = "height: 7rem", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo", @placeholder = "Ingresa una observación" })
+                        @Html.TextAreaFor(model => model.Descripcion, new { @id = "txtDescripcion", @cols = "80", @rows = "20", @style = "height: 250px", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo", @placeholder = "Ingresa una observación" })
                         <span></span>
                         @Html.ValidationMessageFor(model => model.Descripcion, null, new { @class = "text-danger mb-3" })
                     </div>

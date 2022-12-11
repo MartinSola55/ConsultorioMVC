@@ -52,8 +52,8 @@ jQuery('#datepicker').on('change', function () {
 
 function listadoTurnos(arrayHeader, data) {
     let contenido = "";
-    contenido += "<table id='tabla-generic' class='container table table-oscura table-striped table-bordered table-hover'>";
-    contenido += "<thead>";
+    contenido += "<table id='tabla-generic' class='container table table-light table-striped table-bordered table-hover'>";
+    contenido += "<thead class='table-dark'>";
     contenido += "<tr class='fw-bold'>";
     for (let i = 0; i < arrayHeader.length; i++) {
         contenido += "<td class='text-center'>";
@@ -79,14 +79,14 @@ function listadoTurnos(arrayHeader, data) {
                         if (data[i].DiaHorario.Disponible == true) {
                             contenido += "<td style='vertical-align: middle' class='text-center'>Sí</td>";
                             contenido += "<td style='vertical-align: middle' class='d-flex justify-content-center'>";
-                            contenido += "<button class='btn btn-outline-danger' onclick='turnoDelete(" + data[i].DiaHorario.ID + ")'><i class='bi bi-trash3'></i></button>";
+                            contenido += "<button class='btn btn-danger' onclick='turnoDelete(" + data[i].DiaHorario.ID + ")'><i class='bi bi-trash3'></i></button>";
                             contenido += "</td>";
                         }
                         else {
                             contenido += "<td style='vertical-align: middle' class='text-center'>No</td>";
                             contenido += "<td style='vertical-align: middle' class='d-flex justify-content-center'>";
-                            contenido += "<button class='btn btn-outline-success me-4' onclick='modalEdit(" + data[i].ID + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-pencil-square'></i></button>";
-                            contenido += "<button class='btn btn-outline-danger ms-4' onclick='modalDelete(" + data[i].ID + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-trash3'></i></button>";
+                            contenido += "<button class='btn btn-success me-4' onclick='modalEdit(" + data[i].ID + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-pencil-square'></i></button>";
+                            contenido += "<button class='btn btn-danger ms-4' onclick='modalDelete(" + data[i].ID + ")' data-bs-toggle='modal' data-bs-target='#staticBackdrop'><i class='bi bi-trash3'></i></button>";
                             contenido += "</td>";
                         }
                         contenido += "</tr>";

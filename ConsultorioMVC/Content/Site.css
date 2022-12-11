@@ -11,6 +11,47 @@ textarea {
     max-width: 280px;
 }
 
+/* Estilos para redondear las tablas */
+
+table tr td:first-child, td:last-child {
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+}
+
+table tbody tr:last-child {
+    border-bottom-width: 0;
+    border-right-width: 0px;
+    border-left-width: 0;
+}
+
+table thead tr:first-child {
+    border-top-width: 0;
+    border-right-width: 0px;
+    border-left-width: 0;
+}
+
+table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 15px;
+    border-width: 0;
+}
+
+table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 15px;
+    border-width: 0;
+}
+
+table thead tr:first-child td:first-child {
+    border-top-left-radius: 15px;
+    border-width: 0;
+}
+
+table thead tr:first-child td:last-child {
+    border-top-right-radius: 15px;
+    border-width: 0;
+}
+
+/* Hasta aca las tablas */
+
 #page-container {
     position: relative;
     min-height: 93.2vh;
