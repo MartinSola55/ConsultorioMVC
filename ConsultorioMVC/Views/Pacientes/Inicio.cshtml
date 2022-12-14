@@ -132,7 +132,7 @@
                         @Html.ValidationMessageFor(model => model.Localidad, null, new { @class = "text-danger mb-3" })
 
                         <label class="mb-2">Fecha de nacimiento: </label>
-                        @Html.TextBoxFor(model => model.FechaNacimiento, new { @id = "txtNacimiento", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo", @placeholder = "dd/mm/aaaa" })
+                        @Html.TextBoxFor(model => model.FechaNacimiento, new { @id = "txtNacimiento", @class = "form-control limpiarCampo habilitarCampo deshabilitarCampo", @placeholder = "dd/mm/aaaa", @max = @DateTime.Today.ToShortDateString() })
                         <span></span>
                         @Html.ValidationMessageFor(model => model.FechaNacimiento, null, new { @class = "text-danger mb-3" })
 

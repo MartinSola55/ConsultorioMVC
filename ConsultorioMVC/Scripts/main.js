@@ -4,6 +4,7 @@ let hoy = new Date();
 moment.locale('es');
 $("#datepicker").removeAttr("data-val-date");
 limpiarCampos();
+$("#comboHoras").attr("disabled", "disabled");
 
 $(document).ready(function () {
     if ($("#txtNotification").html() !== "") {
@@ -27,7 +28,7 @@ $(function () {
         minDate: minDia,
         maxDate: maxDia,
         opens: 'right',
-        autoUpdateInput: true,
+        autoUpdateInput: false,
         autoApply: true,
         isInvalidDate: function (date) {
             if (date.day() == 1 || date.day() == 2 || date.day() == 3 || date.day() == 5)
@@ -37,7 +38,9 @@ $(function () {
     })
 });
 
-jQuery('#datepicker').on('change', function () {
+$('#datepicker').on('apply.daterangepicker', function (ev, picker) {
+    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+    $("#comboHoras").removeAttr("disabled");
     $("#comboHoras").html("<option value='0' disabled selected>--Seleccione una hora--</option>");
     llenarComboH();
     if (expresiones.fecha.test($('#datepicker').val())) {
@@ -55,8 +58,13 @@ jQuery('#datepicker').on('change', function () {
     }
 });
 
+$('#datepicker').on('cancel.daterangepicker', function (ev, picker) {
+    $(this).val('');
+});
+
 function llenarComboH() {
     let dia = $("#datepicker").val();
+    console.log(dia);
     $.get("../Main/getHoras/?dia=" + dia, function (data) {
         let control = $("#comboHoras");
         let contenido = "";

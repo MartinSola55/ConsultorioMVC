@@ -112,7 +112,7 @@
                             </div>
                             @Html.ValidationMessageFor(model => model.DiaHorario.Dia, null, new { @class = "text-danger mb-4 mt-3" })
                         </div>
-                        <div id="containerHora" class="formContainer">
+                        <div id="containerHora" class="formContainer hidden">
                             <label for="comboHoras" class="asterisco mb-0">Hora</label>
                             <div class="formInput">
                                 @Html.DropDownListFor(model => model.DiaHorario.Horario.ID, new SelectList(ViewBag.listadoHorarios, "Value", "Text"), "--Seleccione una hora--", new { @id = "comboHoras", @class = "form-select required" })

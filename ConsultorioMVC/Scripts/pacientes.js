@@ -1,5 +1,6 @@
 ﻿llenarCombo();
 const header = ["Nombre", "Apellido", "Dirección", "Localidad", "Teléfono", "Obra Social", "Fecha Nac."];
+let maxDia = $('#txtNacimiento').attr('max');
 moment.locale('es');
 $("#txtNacimiento").removeAttr("data-val-date");
 
@@ -37,6 +38,8 @@ $('#txtNacimiento').daterangepicker({
         "toLabel": "Desde",
     },
     singleDatePicker: true,
+    maxDate: maxDia,
+    minDate: "01/01/1900",
     opens: 'right',
     autoUpdateInput: true,
     autoApply: true,
