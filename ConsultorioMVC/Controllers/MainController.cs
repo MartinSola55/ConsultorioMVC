@@ -78,6 +78,7 @@ namespace ConsultorioMVC.Controllers
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Models.Turno turno)
         {
             if (!ModelState.IsValid)
