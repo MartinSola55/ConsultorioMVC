@@ -12,3 +12,7 @@ jQuery(document).ready(function ($) {
 	// Add active class to target link
 	target.parent().addClass('active');
 });
+
+$(".navbar-toggler").click(function () {
+	$(".navbar-collapse").slideToggle(300);
+});
