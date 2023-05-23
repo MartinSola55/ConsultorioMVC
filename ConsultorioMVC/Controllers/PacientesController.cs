@@ -95,7 +95,6 @@ namespace ConsultorioMVC.Controllers
                         {
                             bd.Pacientes.InsertOnSubmit(paciente);
                             bd.SubmitChanges();
-                            ViewBag.Message = "El paciente se guardó correctamente";
                         }
                         else
                         {
@@ -108,9 +107,9 @@ namespace ConsultorioMVC.Controllers
                             pacienteOld.fecha_nacimiento = paciente.fecha_nacimiento;
                             pacienteOld.obra_social_id = paciente.obra_social_id;
                             bd.SubmitChanges();
-                            ViewBag.Message = "El paciente se guardó correctamente";
                         }
-                    } else
+                        return RedirectToAction("DatosPaciente", new { id = paciente.id });
+                } else
                     {
                         ViewBag.Message = "El paciente ingresado ya existe";
                         ViewBag.Error = 1;
