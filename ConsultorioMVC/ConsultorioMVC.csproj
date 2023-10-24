@@ -117,6 +117,7 @@
     <Content Include="Content\jquery-ui.structure.min.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\notification.css" />
     <Content Include="Content\main.css" />
     <Content Include="Content\navbar-main.css" />
     <Content Include="Content\navbar.css" />
@@ -179,6 +180,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\notification.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
